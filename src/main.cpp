@@ -1,5 +1,4 @@
 #include <iostream>
-
 #include "grid/grid.h"
 #include "common/types.h"
 #include "elements/sand.h"

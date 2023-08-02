@@ -1,8 +1,4 @@
-#include "../elements/element.h"
 #include "grid.h"
-#include "../common/types.h"
-#include <memory>
-#include <vector>
 
 
 Grid::Grid(int numRows, int numCols) : rows(numRows), cols(numCols)
