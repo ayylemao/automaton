@@ -17,6 +17,11 @@ bool Grid::isCellEmpty(int row, int col)
     return false;
 }
 
+const Element& Grid::getElementAtCell(int row, int col)
+{
+    return *cells[row][col];
+}
+
 
 void Grid::addElement(ElementPtr element, int row, int col)
 {

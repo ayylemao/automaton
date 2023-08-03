@@ -1,8 +1,10 @@
 #ifndef ELEMENT_H
 #define ELEMENT_H
 
+
 #include <tuple>
 #include <vector>
+#include <SFML/Graphics.hpp>
 
 //Forward declaration
 class Grid;
@@ -14,6 +16,8 @@ protected:
     Grid &grid;
 
 public:
+    sf::Color color;
+
     Element(Grid &g);
 
     std::tuple<int, int> getPos() const;

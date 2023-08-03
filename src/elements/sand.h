@@ -11,7 +11,7 @@ class Sand : public MovableSolid
     public:
     Sand(Grid &g);
     
-    void update() override;
+    //void update() override;
 
 };
 

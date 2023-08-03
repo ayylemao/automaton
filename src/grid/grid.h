@@ -20,6 +20,7 @@ public:
     Grid(int rows, int cols);
     bool isCellEmpty(int row, int col);
     void addElement(ElementPtr element, int row, int col);
+    const Element& getElementAtCell(int row, int col);
     ~Grid();
 };
 

@@ -8,9 +8,10 @@ class MovableSolid : public Solid
     protected:
     //TODO
     public:
-    MovableSolid(Grid &g);
+        MovableSolid(Grid &g);
 
-    bool isMovable() const override;
+        bool isMovable() const override;
+        void update() override;
 };
 
 
