@@ -23,6 +23,7 @@ public:
     void addElement(ElementPtr element, int x, int y);
     Element& getElementAtCell(int x, int y);
     bool isInBoundary(int x, int y);
+    void step();
     ~Grid();
 };
 

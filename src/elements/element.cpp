@@ -23,9 +23,39 @@ bool Element::isMovable() const { return false; }
 
 void Element::moveTo(int to_x, int to_y)
 {
-    grid.cells[to_x][to_y] = std::move(grid.cells[x][y]);
-    x = to_x;
-    y = to_y;
+    if (grid.isInBoundary(to_x, to_y))
+    {
+        grid.cells[to_x][to_y] = std::move(grid.cells[x][y]);
+        x = to_x;
+        y = to_y;
+    }
+    else
+    {
+        std::cout << "Sand got deleted!\n";
+        grid.cells[x][y].reset();
+    }
+}
+
+std::tuple<bool, bool> Element::lookDiagonal()
+{
+    bool left = false;
+    bool right = false;
+    int target_y = y + 1;
+    //left
+    int target_x = x - 1;
+    // TODO: Currently can't fall diagonally out of scope (aka left/right)
+    if (grid.isInBoundary(target_x, target_y) && grid.isCellEmpty(target_x, target_y))
+    {
+        left = true;
+    }
+    //right
+    target_x = x + 1;
+    if (grid.isInBoundary(target_x, target_y) && grid.isCellEmpty(target_x, target_y))
+    {
+        right = true;
+    }
+    return std::make_tuple(left, right);
+
 }
 
 void Element::swapWith(int swap_x, int swap_y)

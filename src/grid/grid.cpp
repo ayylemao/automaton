@@ -11,10 +11,11 @@ Grid::Grid(int numX, int numY) : x_grid(numX), y_grid(numY)
 
 bool Grid::isCellEmpty(int x, int y)
 {
-    if (x >= 0 && x < x_grid && y >= 0 && y < y_grid) {
-        return cells[x][y] == nullptr;
+    if (isInBoundary(x, y)) {
+        if (cells[x][y] == nullptr) { return true; }
+        else { return false; }
     }
-    return false;
+    else { return true; }
 }
 
 Element& Grid::getElementAtCell(int x, int y)
@@ -36,13 +37,27 @@ void Grid::addElement(ElementPtr element, int to_x, int to_y)
 
 bool Grid::isInBoundary(int x, int y)
 {
-    if (x < 0 || x >= x_grid || y < 0 || y >= y_grid){
-        std::cout << x << ", " << y << "\n";
-        return false;
+    if (x < 0 || x >= x_grid || y < 0 || y >= y_grid)
+    {   //std::cout << "is not in boundary! \n";
+        return false; 
     }
-    else
-    {
+    else 
+    {   //std::cout << "is in boundary! \n";
         return true;
+    }
+}
+
+void Grid::step()
+{
+    for (int y = y_grid; y >= 0; --y)
+    {
+        for (int x = 0; x < x_grid; x++)
+        {
+            if (isCellEmpty(x, y) == false)
+            {
+                getElementAtCell(x, y).update();
+            }
+        }
     }
 }
 
