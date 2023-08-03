@@ -1,37 +1,48 @@
 #include "grid.h"
 
 
-Grid::Grid(int numRows, int numCols) : rows(numRows), cols(numCols)
+Grid::Grid(int numX, int numY) : x_grid(numX), y_grid(numY)
 {
-    cells.resize(numRows);
-    for (int i = 0; i < numRows; ++i) {
-        cells[i].resize(numCols);
+    cells.resize(numY);
+    for (int y = 0; y < numY; ++y) {
+        cells[y].resize(numX);
     }
 }
 
-bool Grid::isCellEmpty(int row, int col)
+bool Grid::isCellEmpty(int x, int y)
 {
-    if (row >= 0 && row < rows && col >= 0 && col < cols) {
-        return cells[row][col] == nullptr;
+    if (x >= 0 && x < x_grid && y >= 0 && y < y_grid) {
+        return cells[x][y] == nullptr;
     }
     return false;
 }
 
-const Element& Grid::getElementAtCell(int row, int col)
+Element& Grid::getElementAtCell(int x, int y)
 {
-    return *cells[row][col];
+    return *cells[x][y];
 }
 
-
-void Grid::addElement(ElementPtr element, int row, int col)
+void Grid::addElement(ElementPtr element, int to_x, int to_y)
 {
-    if (row >= 0 && row < rows && col >= 0 && col < cols)
+    if (to_x >= 0 && to_x < x_grid && to_y >= 0 && to_y < y_grid)
     {
-        if (isCellEmpty(row, col) == true)
+        if (isCellEmpty(to_x, to_y) == true)
         {
-            element->setPos(row, col);
-            cells[row][col] = std::move(element);
+            element->setPos(to_x, to_y);
+            cells[to_x][to_y] = std::move(element);
         }
+    }
+}
+
+bool Grid::isInBoundary(int x, int y)
+{
+    if (x < 0 || x >= x_grid || y < 0 || y >= y_grid){
+        std::cout << x << ", " << y << "\n";
+        return false;
+    }
+    else
+    {
+        return true;
     }
 }
 

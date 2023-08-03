@@ -3,3 +3,4 @@ build/
 automaton
 bin/
 obj/
+.vscode/

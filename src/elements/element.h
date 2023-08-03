@@ -5,6 +5,7 @@
 #include <tuple>
 #include <vector>
 #include <SFML/Graphics.hpp>
+#include "../grid/grid.h"
 
 //Forward declaration
 class Grid;
@@ -12,7 +13,8 @@ class Grid;
 class Element
 {
 protected:
-    int position[2];
+    int x;
+    int y;
     Grid &grid;
 
 public:
@@ -22,6 +24,9 @@ public:
 
     std::tuple<int, int> getPos() const;
     void setPos(int row, int col);
+
+    void moveTo(int row, int col);
+    void swapWith(int row, int col);
 
     virtual bool isSolid() const; 
     virtual bool isGas() const;

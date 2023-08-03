@@ -12,15 +12,17 @@
 class Grid
 {
 private:
-    int rows;
-    int cols;
 
 public:
+    int const x_grid;
+    int const y_grid;
     std::vector<std::vector<ElementPtr>> cells;
-    Grid(int rows, int cols);
-    bool isCellEmpty(int row, int col);
-    void addElement(ElementPtr element, int row, int col);
-    const Element& getElementAtCell(int row, int col);
+    Grid(int x, int y);
+    std::vector<ElementPtr>& operator[](int x);
+    bool isCellEmpty(int x, int y);
+    void addElement(ElementPtr element, int x, int y);
+    Element& getElementAtCell(int x, int y);
+    bool isInBoundary(int x, int y);
     ~Grid();
 };
 
