@@ -1,2 +1,2 @@
 # Automaton
-* sudo apt install libfsml-dev
+* sudo apt install libsfml-dev
