@@ -3,5 +3,10 @@
 
 Stone::Stone(Grid &g) : ImmovableSolid(g)
 {
-    //pass
+    color = sf::Color(
+        sf::Uint8(105),
+        sf::Uint8(105),
+        sf::Uint8(105),
+        sf::Uint8(199) + rand() % 56
+    );
 };

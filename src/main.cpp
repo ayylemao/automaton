@@ -5,50 +5,72 @@
 #include "common/types.h"
 #include "elements/sand.h"
 #include "elements/stone.h"
+#include "renderer/renderer.h"
+#include "events/InputHandler.h"
 
-void printGrid(Grid& grid)
-{
-    for (int x = 0; x<grid.x_grid; x++)
-    {
-        for (int y = 0; y<grid.y_grid; y++)
-        {
-            if (grid.isCellEmpty(y, x))
-            {
-                std::cout << '0' << ' ';
-            }
-            else if (!grid.getElementAtCell(y, x).isMovable())
-            {
-                std::cout << '_' << ' ';
-            }
-            else
-            {
-                std::cout << 'S' << ' ';
-            }
-        }
-        std::cout << '\n';
-    }
-    std::cout << '\n';
-}
 
 
 int main(){
-    auto grid = Grid(10, 10);
-    printGrid(grid);
+    auto grid = Grid(100, 100);
+    float windowWidth = 500;
+    float windowHeight = 500;
+    float updateInterval = 0.025;
+    float elapsed = 0.0;
+    sf::Clock clock;  
 
-    for (int j = 0; j<10; j++)
+    sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Automaton");
+    auto renderer = Renderer(window, grid, windowWidth, windowHeight);
+    auto inputhandler = InputHandler(grid, renderer);
+    renderer.setMargin(0);
+
+    for (int j = 0; j<50; j++)
     {
         std::unique_ptr<Stone> stone_ptr = std::make_unique<Stone>(grid);
-        grid.addElement(std::move(stone_ptr), j, 9);
+        grid.addElement(std::move(stone_ptr), j+25, 70);
     }
-    for (int n = 0; n < 30; n++)
+
+
+    while (window.isOpen())
     {
-        std::unique_ptr<Sand> sand_ptr = std::make_unique<Sand>(grid);
-        grid.addElement(std::move(sand_ptr), 5, 0);
-        grid.step();
-        printGrid(grid);
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        printGrid(grid);
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed) { window.close();}
+            inputhandler.clickDrawEvent(event);
+
+        }
+
+        elapsed += clock.restart().asSeconds();
+
+        if (elapsed >= updateInterval)
+        {
+            elapsed -= updateInterval;
+
+            window.clear(); 
+            renderer.drawGrid();
+            window.display();
+            std::unique_ptr<Sand> sand_ptr = std::make_unique<Sand>(grid);
+            grid.addElement(std::move(sand_ptr), 50, 0);
+            grid.step();
+        }
     }
+
+    return 0;
+
+
+
+
+
+
+    //for (int n = 0; n < 1000; n++)
+    //{
+    //    std::unique_ptr<Sand> sand_ptr = std::make_unique<Sand>(grid);
+    //    grid.addElement(std::move(sand_ptr), 15, 0);
+    //    grid.step();
+    //    printGrid(grid);
+    //    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    //    printGrid(grid);
+    //}
 
     return 0;
 }

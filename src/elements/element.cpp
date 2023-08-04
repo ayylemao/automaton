@@ -31,7 +31,6 @@ void Element::moveTo(int to_x, int to_y)
     }
     else
     {
-        std::cout << "Sand got deleted!\n";
         grid.cells[x][y].reset();
     }
 }

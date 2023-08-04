@@ -53,7 +53,7 @@ void MovableSolid::update()
                 moveTo(target_x-1, target_y);
                 return;
             }
-            if (right)
+            else if (right)
             {
                 moveTo(target_x+1, target_y);
                 return;
