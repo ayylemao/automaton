@@ -11,6 +11,7 @@ public:
 	bool isMovable() const override;
 	bool isLiquid() const override;
 	void update() override;
+	virtual void updateColor() = 0;
 };
 
 #endif // !LIQUID_H

@@ -77,7 +77,6 @@ std::tuple<bool, bool> Element::lookLeftRight()
     return std::make_tuple(left, right);
 }
 
-
 void Element::swapWith(int swap_x, int swap_y)
 {
     grid.getElementAtCell(swap_x, swap_y).setPos(x, y);

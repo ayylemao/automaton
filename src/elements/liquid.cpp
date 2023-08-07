@@ -12,6 +12,7 @@ bool Liquid::isMovable() const { return true; }
 
 void Liquid::update()
 {
+    updateColor();
 	// One cell below
 	int target_x = x;
 	int target_y = y + 1;
