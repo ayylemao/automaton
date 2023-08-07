@@ -3,6 +3,7 @@
 
 #include "solid.h"
 #include "../grid/grid.h"
+#include "../common/utils.h"
 
 class MovableSolid : public Solid
 {

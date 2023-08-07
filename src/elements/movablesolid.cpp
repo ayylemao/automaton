@@ -1,5 +1,4 @@
 #include "movablesolid.h"
-#include "../common/utils.h"
 
 
 MovableSolid::MovableSolid(Grid &g) : Solid(g)

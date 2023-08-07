@@ -54,8 +54,29 @@ std::tuple<bool, bool> Element::lookDiagonal()
         right = true;
     }
     return std::make_tuple(left, right);
-
 }
+
+std::tuple<bool, bool> Element::lookLeftRight()
+{
+    bool left = false;
+    bool right = false;
+    int target_y = y;
+    //left
+    int target_x = x - 1;
+
+    if (grid.isInBoundary(target_x, target_y) && grid.isCellEmpty(target_x, target_y))
+    {
+        left = true;
+    }
+    //right
+    target_x = x + 1;
+    if (grid.isInBoundary(target_x, target_y) && grid.isCellEmpty(target_x, target_y))
+    {
+        right = true;
+    }
+    return std::make_tuple(left, right);
+}
+
 
 void Element::swapWith(int swap_x, int swap_y)
 {

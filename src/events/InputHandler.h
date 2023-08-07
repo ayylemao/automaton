@@ -5,6 +5,7 @@
 #include "../grid/grid.h"
 #include "../renderer/renderer.h"
 #include "../elements/stone.h"
+#include "../elements/sand.h"
 
 class InputHandler
 {

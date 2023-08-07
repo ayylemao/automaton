@@ -27,6 +27,7 @@ public:
 
     void moveTo(int row, int col);
     std::tuple<bool, bool> lookDiagonal();
+    std::tuple<bool, bool> lookLeftRight();
     void swapWith(int row, int col);
 
     virtual bool isSolid() const; 

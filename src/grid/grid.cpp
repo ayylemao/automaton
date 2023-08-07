@@ -49,9 +49,11 @@ bool Grid::isInBoundary(int x, int y)
 
 void Grid::step()
 {
+    std::vector<int> xOrder = utils::shuffleXOrder(x_grid);
+
     for (int y = y_grid; y >= 0; --y)
     {
-        for (int x = 0; x < x_grid; x++)
+        for (int x : xOrder)
         {
             if (isCellEmpty(x, y) == false)
             {

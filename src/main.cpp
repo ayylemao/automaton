@@ -5,9 +5,9 @@
 #include "common/types.h"
 #include "elements/sand.h"
 #include "elements/stone.h"
+#include "elements/water.h"
 #include "renderer/renderer.h"
 #include "events/InputHandler.h"
-
 
 
 int main(){
@@ -49,8 +49,8 @@ int main(){
             window.clear(); 
             renderer.drawGrid();
             window.display();
-            std::unique_ptr<Sand> sand_ptr = std::make_unique<Sand>(grid);
-            grid.addElement(std::move(sand_ptr), 50, 0);
+            std::unique_ptr<Water> water_ptr = std::make_unique<Water>(grid);
+            grid.addElement(std::move(water_ptr), 50, 1);
             grid.step();
         }
     }
