@@ -22,8 +22,8 @@ void InputHandler::clickDrawEvent(sf::Event &event)
                 {
                     std::unique_ptr<Stone> stone_ptr = std::make_unique<Stone>(grid);
 
-                    grid.cells[gridX + i][gridY + j].reset();
-                    grid.addElement(std::move(stone_ptr), gridX + i, gridY + j);
+                    //grid.cells[gridX + i][gridY + j].reset();
+                    grid.replaceElement(std::move(stone_ptr), gridX + i, gridY + j);
                 }
             }
         }
@@ -43,8 +43,7 @@ void InputHandler::clickDrawEvent(sf::Event &event)
                 {
                     std::unique_ptr<Sand> sand_ptr = std::make_unique<Sand>(grid);
 
-                    grid.cells[gridX + i][gridY + j].reset();
-                    grid.addElement(std::move(sand_ptr), gridX + i, gridY + j);
+                    grid.replaceElement(std::move(sand_ptr), gridX + i, gridY + j);
                 }
             }
         }

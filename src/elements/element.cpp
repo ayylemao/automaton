@@ -44,13 +44,13 @@ std::tuple<bool, bool> Element::lookDiagonal()
     //left
     int target_x = x - 1;
     // TODO: Currently can't fall diagonally out of scope (aka left/right)
-    if (grid.isInBoundary(target_x, target_y) && grid.isCellEmpty(target_x, target_y))
+    if (grid.getElementAtCell(target_x, target_y).isEmpty() || grid.getElementAtCell(target_x, target_y).isLiquid())
     {
         left = true;
     }
     //right
     target_x = x + 1;
-    if (grid.isInBoundary(target_x, target_y) && grid.isCellEmpty(target_x, target_y))
+    if (grid.getElementAtCell(target_x, target_y).isEmpty() || grid.getElementAtCell(target_x, target_y).isLiquid())
     {
         right = true;
     }
@@ -65,13 +65,13 @@ std::tuple<bool, bool> Element::lookLeftRight()
     //left
     int target_x = x - 1;
 
-    if (grid.isInBoundary(target_x, target_y) && grid.isCellEmpty(target_x, target_y))
+    if (grid.getElementAtCell(target_x, target_y).isEmpty())
     {
         left = true;
     }
     //right
     target_x = x + 1;
-    if (grid.isInBoundary(target_x, target_y) && grid.isCellEmpty(target_x, target_y))
+    if (grid.getElementAtCell(target_x, target_y).isEmpty())
     {
         right = true;
     }

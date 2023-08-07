@@ -25,7 +25,7 @@ void Renderer::drawGrid()
     {
         for (int y = 0; y < grid.y_grid; y++)
         {
-            if (!grid.isCellEmpty(x, y))
+            if (!grid.getElementAtCell(x, y).isEmpty())
             {
                 cellShape.setPosition(static_cast<float>(x * cellSize), static_cast<float>(y * cellSize));
                 cellShape.setSize(sf::Vector2f(static_cast<float>(cellSize), static_cast<float>(cellSize)));

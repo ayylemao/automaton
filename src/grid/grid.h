@@ -19,8 +19,11 @@ public:
     int const y_grid;
     std::vector<std::vector<ElementPtr>> cells;
     Grid(int x, int y);
+    void init();
     bool isCellEmpty(int x, int y);
-    void addElement(ElementPtr element, int x, int y);
+    void initElement(ElementPtr element, int x, int y);
+    void replaceElement(ElementPtr element, int x, int y);
+    void replaceWithEmpty(int x, int y);
     Element& getElementAtCell(int x, int y);
     bool isInBoundary(int x, int y);
     void step();

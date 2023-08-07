@@ -14,22 +14,30 @@ void MovableSolid::update()
     int target_x = x;
     int target_y = y + 1;
 
-
-    if (grid.isCellEmpty(target_x, target_y))
+    // check if would move out of bounds and replace with empty cell
+    if (!grid.isInBoundary(target_x, target_y))
     {
-        moveTo(target_x, target_y);
+        grid.replaceWithEmpty(x, y);
         return;
     }
 
-    if (grid.isInBoundary(target_x, target_y) && !grid.isCellEmpty(target_x, target_y))
+    Element &target_cell = grid.getElementAtCell(target_x, target_y);
+
+    if (target_cell.isEmpty())
     {
-        if (grid.getElementAtCell(target_x, target_y).isLiquid())
+        swapWith(target_x, target_y);
+        return;
+    }
+
+    if (!target_cell.isEmpty())
+    {
+        if (target_cell.isLiquid())
         {
             swapWith(target_x, target_y);
             return;
         }
 
-        if (grid.getElementAtCell(target_x, target_y).isSolid())
+        if (target_cell.isSolid() || target_cell.isLiquid())
         {
             bool left;
             bool right;
@@ -38,30 +46,26 @@ void MovableSolid::update()
             {
                 if(utils::coinToss())
                 {
-                    moveTo(target_x-1, target_y);
+                    swapWith(target_x-1, target_y);
                     return;
                 }
                 else
                 {
-                    moveTo(target_x+1, target_y);
+                    swapWith(target_x+1, target_y);
                     return;
                 }
             } 
             if (left)
             {
-                moveTo(target_x-1, target_y);
+                swapWith(target_x-1, target_y);
                 return;
             }
             else if (right)
             {
-                moveTo(target_x+1, target_y);
+                swapWith(target_x+1, target_y);
                 return;
             }
         }
 
     }
-    
-
-
-
 }

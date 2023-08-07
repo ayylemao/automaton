@@ -13,22 +13,31 @@ bool Liquid::isMovable() const { return true; }
 void Liquid::update()
 {
     updateColor();
-    // One cell below
+
     int target_x = x;
     int target_y = y + 1;
-    if (grid.isCellEmpty(target_x, target_y))
+
+    // check if would move out of bounds and replace with empty cell
+    if (!grid.isInBoundary(target_x, target_y))
     {
-        moveTo(target_x, target_y);
+        grid.replaceWithEmpty(x, y);
         return;
     }
 
-    // Left and right since below is filled
+    if (grid.getElementAtCell(target_x, target_y).isEmpty())
+    {
+        swapWith(target_x, target_y);
+        return;
+    }
+
+    // check left and right since below is filled
     target_x = x;
     target_y = y;
+    Element &target_cell = grid.getElementAtCell(target_x, target_y);
 
-    if (grid.isInBoundary(target_x, target_y) && !grid.isCellEmpty(target_x, target_y))
+    if (!target_cell.isEmpty())
     {
-        if (grid.getElementAtCell(target_x, target_y).isSolid() || grid.getElementAtCell(target_x, target_y).isLiquid())
+        if (target_cell.isSolid() || target_cell.isLiquid())
         {
             bool left;
             bool right;
@@ -38,23 +47,23 @@ void Liquid::update()
             {
                 if(utils::coinToss())
                 {
-                    moveTo(target_x-1, target_y);
+                    swapWith(target_x-1, target_y);
                     return;
                 }
                 else
                 {
-                    moveTo(target_x+1, target_y);
+                    swapWith(target_x+1, target_y);
                     return;
                 }
             } 
             if (left)
             {
-                moveTo(target_x-1, target_y);
+                swapWith(target_x-1, target_y);
                 return;
             }
             else if (right)
             {
-                moveTo(target_x+1, target_y);
+                swapWith(target_x+1, target_y);
                 return;
             }
         }

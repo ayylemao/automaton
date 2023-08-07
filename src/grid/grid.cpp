@@ -1,5 +1,5 @@
 #include "grid.h"
-
+#include "../elements/emptycell.h"
 
 Grid::Grid(int numX, int numY) : x_grid(numX), y_grid(numY)
 {
@@ -23,7 +23,7 @@ Element& Grid::getElementAtCell(int x, int y)
     return *cells[x][y];
 }
 
-void Grid::addElement(ElementPtr element, int to_x, int to_y)
+void Grid::initElement(ElementPtr element, int to_x, int to_y)
 {
     if (to_x >= 0 && to_x < x_grid && to_y >= 0 && to_y < y_grid)
     {
@@ -33,6 +33,40 @@ void Grid::addElement(ElementPtr element, int to_x, int to_y)
             cells[to_x][to_y] = std::move(element);
         }
     }
+}
+
+void Grid::init()
+{
+    for (int i = 0; i < x_grid; i++)
+    {
+        for (int j = 0; j < y_grid; j++)
+        {
+            std::unique_ptr<EmptyCell> empty = std::make_unique<EmptyCell>(*this);
+            this->initElement(std::move(empty), i, j); 
+        }
+    }
+}
+
+void Grid::replaceElement(ElementPtr element, int to_x, int to_y)
+{
+    if (to_x >= 0 && to_x < x_grid && to_y >= 0 && to_y < y_grid)
+    {
+            element->setPos(to_x, to_y);
+            cells[to_x][to_y].reset();
+            cells[to_x][to_y] = std::move(element);
+    }
+}
+
+void Grid::replaceWithEmpty(int to_x, int to_y)
+{
+    if (to_x >= 0 && to_x < x_grid && to_y >= 0 && to_y < y_grid)
+    {
+        std::unique_ptr<EmptyCell> empty = std::make_unique<EmptyCell>(*this);
+        empty->setPos(to_x, to_y);
+        cells[to_x][to_y].reset();
+        cells[to_x][to_y] = std::move(empty);
+    }
+    
 }
 
 bool Grid::isInBoundary(int x, int y)
