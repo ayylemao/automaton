@@ -20,6 +20,7 @@ bool Element::isSolid() const { return false; }
 bool Element::isGas() const { return false; }
 bool Element::isLiquid() const { return false; }
 bool Element::isMovable() const { return false; }
+bool Element::isEmpty() const { return false; }
 
 void Element::moveTo(int to_x, int to_y)
 {

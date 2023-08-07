@@ -34,6 +34,7 @@ public:
     virtual bool isGas() const;
     virtual bool isLiquid() const;
     virtual bool isMovable() const;
+    virtual bool isEmpty() const;
 
     virtual void update() = 0;
     virtual ~Element();
