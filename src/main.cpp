@@ -57,20 +57,4 @@ int main(){
 
     return 0;
 
-
-
-
-
-
-    //for (int n = 0; n < 1000; n++)
-    //{
-    //    std::unique_ptr<Sand> sand_ptr = std::make_unique<Sand>(grid);
-    //    grid.addElement(std::move(sand_ptr), 15, 0);
-    //    grid.step();
-    //    printGrid(grid);
-    //    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    //    printGrid(grid);
-    //}
-
-    return 0;
 }

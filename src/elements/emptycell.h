@@ -11,7 +11,4 @@ class EmptyCell : public Element
 		void update() override;
 		
 };
-
-
-
 #endif
