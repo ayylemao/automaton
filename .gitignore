@@ -4,3 +4,11 @@ automaton
 bin/
 obj/
 .vscode/
+Debug/
+*.sln
+automaton.vcxproj
+automaton.vcxproj.filters
+automaton.vcxproj.user
+packages.config
+packages/
+x64/
