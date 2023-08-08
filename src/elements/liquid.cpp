@@ -17,6 +17,7 @@ void Liquid::update()
     int target_x = x;
     int target_y = y + 1;
 
+    Element &target_cell = grid.getElementAtCell(target_x, target_y);
     // check if would move out of bounds and replace with empty cell
     if (!grid.isInBoundary(target_x, target_y))
     {
@@ -24,7 +25,7 @@ void Liquid::update()
         return;
     }
 
-    if (grid.getElementAtCell(target_x, target_y).isEmpty())
+    if (target_cell.isEmpty())
     {
         swapWith(target_x, target_y);
         return;
@@ -33,46 +34,35 @@ void Liquid::update()
     // check left and right since below is filled
     target_x = x;
     target_y = y;
-    Element &target_cell = grid.getElementAtCell(target_x, target_y);
 
-    if (!target_cell.isEmpty())
-    {
-        if (target_cell.isSolid() || target_cell.isLiquid())
-        {
-            bool left;
-            bool right;
-            bool destroyed;
-            std::tie(left, right, destroyed) = lookLeftRight();	
-            
-            if (!destroyed)
-            {
-				if (left && right)
-				{
-					if(utils::coinToss())
-					{
-						swapWith(target_x-1, target_y);
-						return;
-					}
-					else
-					{
-						swapWith(target_x+1, target_y);
-						return;
-					}
-				} 
-				if (left)
-				{
-					swapWith(target_x-1, target_y);
-					return;
-				}
-				else if (right)
-				{
-					swapWith(target_x+1, target_y);
-					return;
-				}
-
-            }
-        }
+	if (target_cell.isSolid() || target_cell.isLiquid())
+	{
+		bool left;
+		bool right;
+		std::tie(left, right) = lookLeftRight();	
+		
+		if (left && right)
+		{
+			if(utils::coinToss())
+			{
+				swapWith(target_x-1, target_y);
+				return;
+			}
+			else
+			{
+				swapWith(target_x+1, target_y);
+				return;
+			}
+		} 
+		if (left)
+		{
+			swapWith(target_x-1, target_y);
+			return;
+		}
+		else if (right)
+		{
+			swapWith(target_x+1, target_y);
+			return;
+		}
     }
-
-
 }

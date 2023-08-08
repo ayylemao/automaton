@@ -26,13 +26,12 @@ int main(){
     auto inputhandler = InputHandler(grid, renderer);
     renderer.setMargin(0);
 
-    for (int j = 0; j<50; j++)
+    for (int j = 0; j<150; j++)
     {
         std::unique_ptr<Stone> stone_ptr = std::make_unique<Stone>(grid);
-        grid.replaceElement(std::move(stone_ptr), 25+j, 70);
+        grid.replaceElement(std::move(stone_ptr), 25+j, 100);
     }
     
-    std::cout << grid.getElementAtCell(25, 70).isEmpty() << '\n';
 
     while (window.isOpen())
     {
@@ -54,7 +53,7 @@ int main(){
             renderer.drawGrid();
             window.display();
             std::unique_ptr<Water> water_ptr = std::make_unique<Water>(grid);
-            grid.replaceElement(std::move(water_ptr), 50, 1);
+            grid.replaceElement(std::move(water_ptr), 100, 1);
             grid.step();
         }
     }

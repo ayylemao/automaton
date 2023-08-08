@@ -99,11 +99,20 @@ void Grid::step()
 		for (int x : xOrder)
 		{
 		    Element& element = getElementAtCell(x, y);
-			if (!element.isEmpty())
+			if (!element.isEmpty() && !element.hasMoved)
 			{
 				element.update();
+                element.hasMoved = true;
 			}
 		}
+    for (int i = 0; i < x_grid * y_grid; i++)
+    {
+        Element& element = getLinearElement(i);
+        if (element.hasMoved)
+        {
+			element.hasMoved = false;
+        }
+    }
 }
 
 Grid::~Grid(){

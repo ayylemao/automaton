@@ -18,6 +18,8 @@ protected:
     Grid &grid;
 
 public:
+
+    bool hasMoved;
     sf::Color color;
 
     Element(Grid &g);
@@ -26,8 +28,8 @@ public:
     void setPos(int row, int col);
 
     void moveTo(int row, int col);
-    std::tuple<bool, bool, bool> lookDiagonal();
-    std::tuple<bool, bool, bool> lookLeftRight();
+    std::tuple<bool, bool> lookDiagonal();
+    std::tuple<bool, bool> lookLeftRight();
     void swapWith(int row, int col);
 
     virtual bool isSolid() const; 

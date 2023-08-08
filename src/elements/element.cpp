@@ -5,6 +5,7 @@ Element::Element(Grid &g) : grid(g)
 {
     x = 0;
     y = 0;
+    hasMoved = false;
 };
 
 void Element::setPos(int row, int col){
@@ -36,85 +37,57 @@ void Element::moveTo(int to_x, int to_y)
     }
 }
 
-std::tuple<bool, bool, bool> Element::lookDiagonal()
+std::tuple<bool, bool> Element::lookDiagonal()
 {
     bool left = false;
     bool right = false;
-    bool destroyed = false;
     int target_y = y + 1;
+
     //left
     int target_x = x - 1;
-    
-
-    if (!grid.isInBoundary(target_x, target_x))
+    Element& targetCellLeft = grid.getElementAtCell(target_x, target_y);
+    if (grid.isInBoundary(target_x, target_x))
     {
-        destroyed = true;
-        left = false;
-        grid.replaceWithEmpty(x, y);
-    }
-    else
-    {
-		if (grid.getElementAtCell(target_x, target_y).isEmpty() || grid.getElementAtCell(target_x, target_y).isLiquid())
-		{
-			left = true;
-		}
-    }
-    //right
-    target_x = x + 1;
-    if (!grid.isInBoundary(target_x, target_x))
-    {
-        destroyed = true;
-        right = false;
-        grid.replaceWithEmpty(x, y);
-    }
-    else
-    {
-		if (grid.getElementAtCell(target_x, target_y).isEmpty() || grid.getElementAtCell(target_x, target_y).isLiquid())
-		{
-			right = true;
-		}
-    }
-    return std::make_tuple(left, right, destroyed);
-}
-
-std::tuple<bool, bool, bool> Element::lookLeftRight()
-{
-    bool left = false;
-    bool right = false;
-    bool destroyed = false;
-    int target_y = y;
-    //left
-    int target_x = x - 1;
-
-    if (!grid.isInBoundary(target_x, target_x))
-    {
-        destroyed = true;
-        left = false;
-        grid.replaceWithEmpty(x, y);
-    }
-    else
-    {
-        if (grid.getElementAtCell(target_x, target_y).isEmpty())
+        if (targetCellLeft.isEmpty() || targetCellLeft.isLiquid())
         {
             left = true;
         }
     }
+
     //right
     target_x = x + 1;
-    if (!grid.isInBoundary(target_x, target_x))
+    Element& targetCellRight = grid.getElementAtCell(target_x, target_y);
+    if (grid.isInBoundary(target_x, target_x))
     {
-        destroyed = true;
-        left = false;
-        grid.replaceWithEmpty(x, y);
-    }
-    else
-    {
-        if (grid.getElementAtCell(target_x, target_y).isEmpty())
+        if (targetCellRight.isEmpty() || targetCellRight.isLiquid())
         {
             right = true;
         }
     }
-    return std::make_tuple(left, right, destroyed);
+    return std::make_tuple(left, right);
+}
+
+std::tuple<bool, bool> Element::lookLeftRight()
+{
+    bool left = false;
+    bool right = false;
+    int target_y = y;
+    //left
+    int target_x = x - 1;
+
+	if (grid.getElementAtCell(target_x, target_y).isEmpty() 
+		&& grid.isInBoundary(target_x, target_x))
+	{
+		left = true;
+	}
+    //right
+    target_x = x + 1;
+	if (grid.getElementAtCell(target_x, target_y).isEmpty()
+		&& grid.isInBoundary(target_x, target_x))
+	{
+		right = true;
+	}
+    return std::make_tuple(left, right);
 }
 
 void Element::swapWith(int swap_x, int swap_y)
