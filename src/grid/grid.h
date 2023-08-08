@@ -17,7 +17,8 @@ private:
 public:
     int const x_grid;
     int const y_grid;
-    std::vector<std::vector<ElementPtr>> cells;
+    std::vector<ElementPtr> cells;
+    size_t index(int x, int y) const;
     Grid(int x, int y);
     void init();
     bool isCellEmpty(int x, int y);
@@ -26,6 +27,7 @@ public:
     void replaceWithEmpty(int x, int y);
     Element& getElementAtCell(int x, int y);
     bool isInBoundary(int x, int y);
+    Element& getLinearElement(int i);
     void step();
     ~Grid();
 };

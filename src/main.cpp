@@ -12,13 +12,14 @@
 
 int main(){
     float frame_cap = 60.0;
-    auto grid = Grid(100, 100);
-    float windowWidth = 500;
-    float windowHeight = 500;
+    auto grid = Grid(200, 200);
+    float windowWidth = 800;
+    float windowHeight = 800;
     float updateInterval = 1.0/frame_cap;
     float elapsed = 0.0;
     grid.init();
     sf::Clock clock;  
+
 
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Automaton");
     auto renderer = Renderer(window, grid, windowWidth, windowHeight);

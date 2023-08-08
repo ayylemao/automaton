@@ -26,13 +26,13 @@ void Element::moveTo(int to_x, int to_y)
 {
     if (grid.isInBoundary(to_x, to_y))
     {
-        grid.cells[to_x][to_y] = std::move(grid.cells[x][y]);
+        grid.cells[grid.index(to_x, to_y)] = std::move(grid.cells[grid.index(x, y)]);
         x = to_x;
         y = to_y;
     }
     else
     {
-        grid.cells[x][y].reset();
+        grid.cells[grid.index(x, y)].reset();
     }
 }
 
@@ -120,7 +120,7 @@ std::tuple<bool, bool, bool> Element::lookLeftRight()
 void Element::swapWith(int swap_x, int swap_y)
 {
     grid.getElementAtCell(swap_x, swap_y).setPos(x, y);
-    std::swap(grid.cells[x][y], grid.cells[swap_x][swap_y]);
+    std::swap(grid.cells[grid.index(x, y)], grid.cells[grid.index(swap_x, swap_y)]);
     x = swap_x;
     y = swap_y;
 }

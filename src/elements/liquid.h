@@ -6,6 +6,8 @@
 
 class Liquid : public Element
 {
+protected:
+	int dispersionRate;
 public:
 	Liquid(Grid& g);
 	bool isMovable() const override;

@@ -22,7 +22,6 @@ void InputHandler::clickDrawEvent(sf::Event &event)
                 {
                     std::unique_ptr<Stone> stone_ptr = std::make_unique<Stone>(grid);
 
-                    //grid.cells[gridX + i][gridY + j].reset();
                     grid.replaceElement(std::move(stone_ptr), gridX + i, gridY + j);
                 }
             }

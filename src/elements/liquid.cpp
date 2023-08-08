@@ -3,7 +3,7 @@
 
 Liquid::Liquid(Grid& g) : Element(g)
 {
-
+    dispersionRate = 5;
 }
 
 bool Liquid::isLiquid() const { return true; }
