@@ -41,31 +41,34 @@ void MovableSolid::update()
         {
             bool left;
             bool right;
-            std::tie(left, right) = lookDiagonal();
-            if (left && right)
+            bool destroyed;
+            std::tie(left, right, destroyed) = lookDiagonal();
+            if (!destroyed)
             {
-                if(utils::coinToss())
-                {
-                    swapWith(target_x-1, target_y);
-                    return;
-                }
-                else
-                {
-                    swapWith(target_x+1, target_y);
-                    return;
-                }
-            } 
-            if (left)
-            {
-                swapWith(target_x-1, target_y);
-                return;
+				if (left && right)
+				{
+					if(utils::coinToss())
+					{
+						swapWith(target_x-1, target_y);
+						return;
+					}
+					else
+					{
+						swapWith(target_x+1, target_y);
+						return;
+					}
+				} 
+				if (left)
+				{
+					swapWith(target_x-1, target_y);
+					return;
+				}
+				else if (right)
+				{
+					swapWith(target_x+1, target_y);
+					return;
+				} 
             }
-            else if (right)
-            {
-                swapWith(target_x+1, target_y);
-                return;
-            }
-        }
-
+        } 
     }
 }

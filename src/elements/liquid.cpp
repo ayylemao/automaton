@@ -41,30 +41,35 @@ void Liquid::update()
         {
             bool left;
             bool right;
-            std::tie(left, right) = lookLeftRight();	
+            bool destroyed;
+            std::tie(left, right, destroyed) = lookLeftRight();	
+            
+            if (!destroyed)
+            {
+				if (left && right)
+				{
+					if(utils::coinToss())
+					{
+						swapWith(target_x-1, target_y);
+						return;
+					}
+					else
+					{
+						swapWith(target_x+1, target_y);
+						return;
+					}
+				} 
+				if (left)
+				{
+					swapWith(target_x-1, target_y);
+					return;
+				}
+				else if (right)
+				{
+					swapWith(target_x+1, target_y);
+					return;
+				}
 
-            if (left && right)
-            {
-                if(utils::coinToss())
-                {
-                    swapWith(target_x-1, target_y);
-                    return;
-                }
-                else
-                {
-                    swapWith(target_x+1, target_y);
-                    return;
-                }
-            } 
-            if (left)
-            {
-                swapWith(target_x-1, target_y);
-                return;
-            }
-            else if (right)
-            {
-                swapWith(target_x+1, target_y);
-                return;
             }
         }
     }
