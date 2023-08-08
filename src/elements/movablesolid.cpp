@@ -29,7 +29,7 @@ void MovableSolid::update()
         return;
     }
 
-		if (target_cell.isSolid())
+	if (target_cell.isSolid())
 		{
 		bool left;
 		bool right;

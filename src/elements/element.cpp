@@ -45,9 +45,9 @@ std::tuple<bool, bool> Element::lookDiagonal()
 
     //left
     int target_x = x - 1;
-    Element& targetCellLeft = grid.getElementAtCell(target_x, target_y);
     if (grid.isInBoundary(target_x, target_x))
     {
+        Element& targetCellLeft = grid.getElementAtCell(target_x, target_y);
         if (targetCellLeft.isEmpty() || targetCellLeft.isLiquid())
         {
             left = true;
@@ -56,9 +56,9 @@ std::tuple<bool, bool> Element::lookDiagonal()
 
     //right
     target_x = x + 1;
-    Element& targetCellRight = grid.getElementAtCell(target_x, target_y);
     if (grid.isInBoundary(target_x, target_x))
     {
+        Element& targetCellRight = grid.getElementAtCell(target_x, target_y);
         if (targetCellRight.isEmpty() || targetCellRight.isLiquid())
         {
             right = true;
@@ -75,18 +75,22 @@ std::tuple<bool, bool> Element::lookLeftRight()
     //left
     int target_x = x - 1;
 
-	if (grid.getElementAtCell(target_x, target_y).isEmpty() 
-		&& grid.isInBoundary(target_x, target_x))
-	{
-		left = true;
-	}
+    if (grid.isInBoundary(target_x, target_x))
+    {
+		if (grid.getElementAtCell(target_x, target_y).isEmpty())
+		{
+			left = true;
+		}
+    }
     //right
     target_x = x + 1;
-	if (grid.getElementAtCell(target_x, target_y).isEmpty()
-		&& grid.isInBoundary(target_x, target_x))
-	{
-		right = true;
-	}
+    if (grid.isInBoundary(target_x, target_x))
+    {
+		if (grid.getElementAtCell(target_x, target_y).isEmpty())
+		{
+			right = true;
+		}
+    }
     return std::make_tuple(left, right);
 }
 

@@ -17,8 +17,9 @@ void Liquid::update()
     int target_x = x;
     int target_y = y + 1;
 
-    Element &target_cell = grid.getElementAtCell(target_x, target_y);
     // check if would move out of bounds and replace with empty cell
+    Element &target_cell = grid.getElementAtCell(target_x, target_y);
+
     if (!grid.isInBoundary(target_x, target_y))
     {
         grid.replaceWithEmpty(x, y);
@@ -40,7 +41,6 @@ void Liquid::update()
 		bool left;
 		bool right;
 		std::tie(left, right) = lookLeftRight();	
-		
 		if (left && right)
 		{
 			if(utils::coinToss())
@@ -54,7 +54,7 @@ void Liquid::update()
 				return;
 			}
 		} 
-		if (left)
+		else if (left)
 		{
 			swapWith(target_x-1, target_y);
 			return;
