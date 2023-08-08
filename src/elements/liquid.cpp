@@ -3,7 +3,7 @@
 
 Liquid::Liquid(Grid& g) : Element(g)
 {
-    dispersionRate = 5;
+    
 }
 
 bool Liquid::isLiquid() const { return true; }
@@ -18,13 +18,14 @@ void Liquid::update()
     int target_y = y + 1;
 
     // check if would move out of bounds and replace with empty cell
-    Element &target_cell = grid.getElementAtCell(target_x, target_y);
 
     if (!grid.isInBoundary(target_x, target_y))
     {
         grid.replaceWithEmpty(x, y);
         return;
     }
+    
+	Element &target_cell = grid.getElementAtCell(target_x, target_y);
 
     if (target_cell.isEmpty())
     {
@@ -38,30 +39,30 @@ void Liquid::update()
 
 	if (target_cell.isSolid() || target_cell.isLiquid())
 	{
-		bool left;
-		bool right;
-		std::tie(left, right) = lookLeftRight();	
-		if (left && right)
+		int left;
+		int right;
+		std::tie(left, right) = lookLeftRight();
+		if (left > 0 && right > 0)
 		{
 			if(utils::coinToss())
 			{
-				swapWith(target_x-1, target_y);
+				swapWith(target_x-left, target_y);
 				return;
 			}
 			else
 			{
-				swapWith(target_x+1, target_y);
+				swapWith(target_x+right, target_y);
 				return;
 			}
 		} 
-		else if (left)
+		else if (left>0)
 		{
-			swapWith(target_x-1, target_y);
+			swapWith(target_x-left, target_y);
 			return;
 		}
-		else if (right)
+		else if (right>0)
 		{
-			swapWith(target_x+1, target_y);
+			swapWith(target_x+right, target_y);
 			return;
 		}
     }

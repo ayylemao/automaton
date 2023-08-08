@@ -23,6 +23,11 @@ bool Element::isLiquid() const { return false; }
 bool Element::isMovable() const { return false; }
 bool Element::isEmpty() const { return false; }
 
+int Element::getDispersionRate() const
+{
+    return 0;
+}
+
 void Element::moveTo(int to_x, int to_y)
 {
     if (grid.isInBoundary(to_x, to_y))
@@ -67,29 +72,47 @@ std::tuple<bool, bool> Element::lookDiagonal()
     return std::make_tuple(left, right);
 }
 
-std::tuple<bool, bool> Element::lookLeftRight()
+std::tuple<int, int> Element::lookLeftRight()
 {
-    bool left = false;
-    bool right = false;
+    bool left = 0;
+    bool right = 0;
     int target_y = y;
     //left
-    int target_x = x - 1;
-
-    if (grid.isInBoundary(target_x, target_x))
+    int target_x = x;
+    
+    for (int i = 1; i < getDispersionRate(); i++)
     {
-		if (grid.getElementAtCell(target_x, target_y).isEmpty())
+        target_x = x - i;
+		if (grid.isInBoundary(target_x, target_y))
 		{
-			left = true;
+            std::cout << i << "\n";
+			if (!grid.getElementAtCell(target_x, target_y).isEmpty())
+			{
+                left = i - 1;
+                break;
+			}
 		}
+        else
+        {
+            left = i - 1;
+        }
     }
-    //right
-    target_x = x + 1;
-    if (grid.isInBoundary(target_x, target_x))
+
+    for (int i = 1; i < getDispersionRate(); i++)
     {
-		if (grid.getElementAtCell(target_x, target_y).isEmpty())
+        target_x = x + i;
+		if (grid.isInBoundary(target_x, target_y))
 		{
-			right = true;
+			if (!grid.getElementAtCell(target_x, target_y).isEmpty())
+			{
+                right = i - 1;
+                break;
+			}
 		}
+        else
+        {
+            left = i - 1;
+        }
     }
     return std::make_tuple(left, right);
 }

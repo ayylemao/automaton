@@ -16,6 +16,7 @@ protected:
     int x;
     int y;
     Grid &grid;
+    int dispersionRate;
 
 public:
 
@@ -29,9 +30,10 @@ public:
 
     void moveTo(int row, int col);
     std::tuple<bool, bool> lookDiagonal();
-    std::tuple<bool, bool> lookLeftRight();
+    std::tuple<int, int> lookLeftRight();
     void swapWith(int row, int col);
-
+    
+    virtual int getDispersionRate() const;
     virtual bool isSolid() const; 
     virtual bool isGas() const;
     virtual bool isLiquid() const;

@@ -15,13 +15,14 @@ void MovableSolid::update()
     int target_y = y + 1;
 
     // check if would move out of bounds and replace with empty cell
-    Element &target_cell = grid.getElementAtCell(target_x, target_y);
 
     if (!grid.isInBoundary(target_x, target_y))
     {
         grid.replaceWithEmpty(x, y);
         return;
     }
+    
+	Element &target_cell = grid.getElementAtCell(target_x, target_y);
 
     if (target_cell.isEmpty() || target_cell.isLiquid())
     {

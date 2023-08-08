@@ -9,6 +9,7 @@ Water::Water(Grid& g) : Liquid(g)
         sf::Uint8(200 + rand() % 46),          // Blue channel with random variation
         sf::Uint8(255)                        // Alpha channel
     );
+    dispersionRate = 5;
 }
 
 void Water::updateColor() 
@@ -20,3 +21,9 @@ void Water::updateColor()
         sf::Uint8(255)                        // Alpha channel
     );
 }
+
+int Water::getDispersionRate() const
+{
+    return 5;
+}
+

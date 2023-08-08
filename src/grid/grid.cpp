@@ -77,13 +77,13 @@ void Grid::replaceWithEmpty(int to_x, int to_y)
 
 bool Grid::isInBoundary(int x, int y)
 {
-    if (x < 0 || x >= x_grid || y < 0 || y >= y_grid)
+    if (x >= 0 && x < x_grid && y >= 0 && y < y_grid)
     {
-        return false; 
+        return true; 
     }
     else 
     {
-        return true;
+        return false;
     }
 }
 
