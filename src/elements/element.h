@@ -30,7 +30,7 @@ public:
 
     void moveTo(int row, int col);
     std::tuple<bool, bool> lookDiagonal();
-    std::tuple<int, int> lookLeftRight();
+    std::tuple<bool, bool> lookLeftRight();
     void swapWith(int row, int col);
     
     virtual int getDispersionRate() const;

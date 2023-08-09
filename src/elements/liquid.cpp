@@ -25,9 +25,9 @@ void Liquid::update()
         return;
     }
     
-	Element &target_cell = grid.getElementAtCell(target_x, target_y);
+	Element *target_cell = grid.getElementAtCell(target_x, target_y);
 
-    if (target_cell.isEmpty())
+    if (target_cell->isEmpty())
     {
         swapWith(target_x, target_y);
         return;
@@ -37,32 +37,32 @@ void Liquid::update()
     target_x = x;
     target_y = y;
 
-	if (target_cell.isSolid() || target_cell.isLiquid())
+	if (target_cell->isSolid() || target_cell->isLiquid())
 	{
-		int left;
-		int right;
+		bool left;
+		bool right;
 		std::tie(left, right) = lookLeftRight();
-		if (left > 0 && right > 0)
+		if (left && right)
 		{
 			if(utils::coinToss())
 			{
-				swapWith(target_x-left, target_y);
+				swapWith(target_x-1, target_y);
 				return;
 			}
 			else
 			{
-				swapWith(target_x+right, target_y);
+				swapWith(target_x+1, target_y);
 				return;
 			}
 		} 
-		else if (left>0)
+		else if (left)
 		{
-			swapWith(target_x-left, target_y);
+			swapWith(target_x-1, target_y);
 			return;
 		}
-		else if (right>0)
+		else if (right)
 		{
-			swapWith(target_x+right, target_y);
+			swapWith(target_x+1, target_y);
 			return;
 		}
     }

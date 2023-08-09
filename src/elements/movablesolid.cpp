@@ -22,15 +22,15 @@ void MovableSolid::update()
         return;
     }
     
-	Element &target_cell = grid.getElementAtCell(target_x, target_y);
+	Element *target_cell = grid.getElementAtCell(target_x, target_y);
 
-    if (target_cell.isEmpty() || target_cell.isLiquid())
+    if (target_cell->isEmpty() || target_cell->isLiquid())
     {
         swapWith(target_x, target_y);
         return;
     }
 
-	if (target_cell.isSolid())
+	if (target_cell->isSolid())
 		{
 		bool left;
 		bool right;

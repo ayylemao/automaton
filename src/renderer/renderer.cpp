@@ -25,11 +25,11 @@ void Renderer::drawGrid()
     {
         for (int y = 0; y < grid.y_grid; y++)
         {
-            if (!grid.getElementAtCell(x, y).isEmpty())
+            if (!grid.getElementAtCell(x, y)->isEmpty())
             {
                 cellShape.setPosition(static_cast<float>(x * cellSize), static_cast<float>(y * cellSize));
                 cellShape.setSize(sf::Vector2f(static_cast<float>(cellSize), static_cast<float>(cellSize)));
-                cellShape.setFillColor(grid.getElementAtCell(x, y).color);
+                cellShape.setFillColor(grid.getElementAtCell(x, y)->color);
 
                 window.draw(cellShape);
             }

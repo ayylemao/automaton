@@ -24,9 +24,9 @@ bool Grid::isCellEmpty(int x, int y)
     else { return true; }
 }
 
-Element& Grid::getElementAtCell(int x, int y)
+Element* Grid::getElementAtCell(int x, int y)
 {
-    return *cells[index(x, y)];
+    return cells[index(x, y)].get();
 }
 
 void Grid::initElement(ElementPtr element, int to_x, int to_y)
@@ -87,30 +87,30 @@ bool Grid::isInBoundary(int x, int y)
     }
 }
 
-Element& Grid::getLinearElement(int i)
+Element* Grid::getLinearElement(int i)
 {
-    return *cells[i];
+    return cells[i].get();
 }
 
 void Grid::step()
 {
     std::vector<int> xOrder = utils::shuffleXOrder(x_grid);
-    for (int y = y_grid-1; y >=0; y--)
+    for (int y = y_grid - 1 ; y >= 0; --y)
 		for (int x : xOrder)
 		{
-		    Element& element = getElementAtCell(x, y);
-			if (!element.isEmpty() && !element.hasMoved)
+		    Element *element = getElementAtCell(x, y);
+			if (!element->isEmpty() && !element->hasMoved)
 			{
-				element.update();
-                element.hasMoved = true;
+				element->update();
+                element->hasMoved = true;
 			}
 		}
     for (int i = 0; i < x_grid * y_grid; i++)
     {
-        Element& element = getLinearElement(i);
-        if (element.hasMoved)
+        Element* element = getLinearElement(i);
+        if (element->hasMoved)
         {
-			element.hasMoved = false;
+			element->hasMoved = false;
         }
     }
 }

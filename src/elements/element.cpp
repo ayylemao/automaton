@@ -52,8 +52,8 @@ std::tuple<bool, bool> Element::lookDiagonal()
     int target_x = x - 1;
     if (grid.isInBoundary(target_x, target_x))
     {
-        Element& targetCellLeft = grid.getElementAtCell(target_x, target_y);
-        if (targetCellLeft.isEmpty() || targetCellLeft.isLiquid())
+        Element* targetCellLeft = grid.getElementAtCell(target_x, target_y);
+        if (targetCellLeft->isEmpty() || targetCellLeft->isLiquid())
         {
             left = true;
         }
@@ -63,8 +63,8 @@ std::tuple<bool, bool> Element::lookDiagonal()
     target_x = x + 1;
     if (grid.isInBoundary(target_x, target_x))
     {
-        Element& targetCellRight = grid.getElementAtCell(target_x, target_y);
-        if (targetCellRight.isEmpty() || targetCellRight.isLiquid())
+        Element* targetCellRight = grid.getElementAtCell(target_x, target_y);
+        if (targetCellRight->isEmpty() || targetCellRight->isLiquid())
         {
             right = true;
         }
@@ -72,54 +72,36 @@ std::tuple<bool, bool> Element::lookDiagonal()
     return std::make_tuple(left, right);
 }
 
-std::tuple<int, int> Element::lookLeftRight()
+std::tuple<bool, bool> Element::lookLeftRight()
 {
-    bool left = 0;
-    bool right = 0;
+    bool left = false;
+    bool right = false;
     int target_y = y;
     //left
-    int target_x = x;
     
-    for (int i = 1; i < getDispersionRate(); i++)
-    {
-        target_x = x - i;
-		if (grid.isInBoundary(target_x, target_y))
+    int target_x = x - 1;
+	if (grid.isInBoundary(target_x, target_y))
+	{
+		if (grid.getElementAtCell(target_x, target_y)->isEmpty())
 		{
-            std::cout << i << "\n";
-			if (!grid.getElementAtCell(target_x, target_y).isEmpty())
-			{
-                left = i - 1;
-                break;
-			}
+			left = true;
 		}
-        else
-        {
-            left = i - 1;
-        }
-    }
+	}
 
-    for (int i = 1; i < getDispersionRate(); i++)
-    {
-        target_x = x + i;
-		if (grid.isInBoundary(target_x, target_y))
+    target_x = x + 1;
+	if (grid.isInBoundary(target_x, target_y))
+	{
+		if (grid.getElementAtCell(target_x, target_y)->isEmpty())
 		{
-			if (!grid.getElementAtCell(target_x, target_y).isEmpty())
-			{
-                right = i - 1;
-                break;
-			}
+			right = true;
 		}
-        else
-        {
-            left = i - 1;
-        }
-    }
+	}
     return std::make_tuple(left, right);
 }
 
 void Element::swapWith(int swap_x, int swap_y)
 {
-    grid.getElementAtCell(swap_x, swap_y).setPos(x, y);
+    grid.getElementAtCell(swap_x, swap_y)->setPos(x, y);
     std::swap(grid.cells[grid.index(x, y)], grid.cells[grid.index(swap_x, swap_y)]);
     x = swap_x;
     y = swap_y;

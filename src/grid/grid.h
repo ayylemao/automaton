@@ -25,9 +25,9 @@ public:
     void initElement(ElementPtr element, int x, int y);
     void replaceElement(ElementPtr element, int x, int y);
     void replaceWithEmpty(int x, int y);
-    Element& getElementAtCell(int x, int y);
+    Element* getElementAtCell(int x, int y);
     bool isInBoundary(int x, int y);
-    Element& getLinearElement(int i);
+    Element* getLinearElement(int i);
     void step();
     ~Grid();
 };
