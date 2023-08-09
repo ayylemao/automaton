@@ -11,7 +11,7 @@ namespace utils
 {
     bool coinToss();
     std::vector<int> shuffleXOrder(int const grid_x);
-    std::vector<std::tuple<int, int>> utils::bresenhamLine(int x1, int y1, int x2, int y2);
+    std::vector<std::tuple<int, int>> bresenhamLine(int x1, int y1, int x2, int y2);
 }
 
 
