@@ -2,7 +2,7 @@
 
 InputHandler::InputHandler(Grid &g, Renderer &r) : grid(g), renderer(r)
 {
-    //pass
+    cellSize = renderer.getCellSize();
 }
 
 void InputHandler::clickDrawEvent(sf::Event &event)
@@ -45,6 +45,48 @@ void InputHandler::clickDrawEvent(sf::Event &event)
                     grid.replaceElement(std::move(sand_ptr), gridX + i, gridY + j);
                 }
             }
+        }
+    }
+}
+
+
+// TODO: fix so one can actually drag
+void InputHandler::clickPullEvent(sf::Event& event) {
+    static bool isDrawing = false;
+    static int startX;
+    static int startY;
+    int startGridX;
+    int startGridY;
+
+    if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+        isDrawing = true;
+        startX = event.mouseButton.x;
+        startY = event.mouseButton.y;
+    }
+    else if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
+        isDrawing = false;
+    }
+
+    if (isDrawing) {
+        int endX = sf::Mouse::getPosition(renderer.window).x;
+        int endY = sf::Mouse::getPosition(renderer.window).y;
+        startGridX = startX / cellSize;
+        startGridY = startY / cellSize;
+        endX = endX / cellSize;
+        endY = endY / cellSize;
+        std::cout << startGridY / cellSize << std::endl;
+        std::vector<std::tuple<int, int>> linePixels = utils::bresenhamLine(startGridX, startGridY, endX, endY);
+
+
+        for (const auto& pixel : linePixels) {
+            int x = std::get<0>(pixel);
+            int y = std::get<1>(pixel);
+            if (grid.isInBoundary(x, y))
+            {
+                std::unique_ptr<Water> sand_ptr = std::make_unique<Water>(grid);
+                grid.replaceElement(std::move(sand_ptr), x, y);
+            }
+
         }
     }
 }

@@ -20,7 +20,6 @@ int main(){
     grid.init();
     sf::Clock clock;  
 
-
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Automaton");
     auto renderer = Renderer(window, grid, windowWidth, windowHeight);
     auto inputhandler = InputHandler(grid, renderer);
@@ -41,7 +40,7 @@ int main(){
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed) { window.close();}
-            inputhandler.clickDrawEvent(event);
+                inputhandler.clickDrawEvent(event);
 
         }
 
