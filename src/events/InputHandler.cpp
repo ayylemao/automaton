@@ -3,6 +3,8 @@
 InputHandler::InputHandler(Grid &g, Renderer &r) : grid(g), renderer(r)
 {
     cellSize = renderer.getCellSize();
+    lastKeyPressed = sf::Keyboard::Key::Q;
+    markerRadius = 4;
 }
 
 void InputHandler::clickDrawEvent(sf::Event &event)
@@ -50,8 +52,7 @@ void InputHandler::clickDrawEvent(sf::Event &event)
 }
 
 
-// TODO: fix so one can actually drag
-void InputHandler::clickPullEvent(sf::Event& event) {
+void InputHandler::drawStaticElement(sf::Event& event) {
     static bool isDrawing = false;
     static int startX;
     static int startY;
@@ -77,7 +78,6 @@ void InputHandler::clickPullEvent(sf::Event& event) {
 	if (isDrawing) {
         int endX = sf::Mouse::getPosition(renderer.window).x;
         int endY = sf::Mouse::getPosition(renderer.window).y;
-        std::cout << "StartX: " << startX << ' ' << startY << std::endl;
         startGridX = startX / cellSize;
         startGridY = startY / cellSize;
         endX = endX / cellSize;
@@ -90,8 +90,7 @@ void InputHandler::clickPullEvent(sf::Event& event) {
             int y = std::get<1>(pixel);
             if (grid.isInBoundary(x, y))
             {
-                std::unique_ptr<Water> sand_ptr = std::make_unique<Water>(grid);
-                grid.replaceElement(std::move(sand_ptr), x, y);
+                drawCircle(x, y, markerRadius);
             }
 
         }
@@ -107,3 +106,89 @@ void InputHandler::clickPullEvent(sf::Event& event) {
         renderer.window.display();
 	}
 }
+
+void InputHandler::spawnDynamicElement()
+{
+	sf::Vector2i mouse_pos = sf::Mouse::getPosition(renderer.window);
+	int x = mouse_pos.x / cellSize;
+	int y = mouse_pos.y / cellSize;
+	if (grid.isInBoundary(x, y))
+	{
+		drawCircle(x, y, markerRadius);
+	}
+}
+
+void InputHandler::drawCircle(int x, int y, int r)
+{
+    for (int i = x - r; i <= x + r; ++i) {
+        for (int j = y - r; j <= y + r; ++j) {
+            // Calculate the distance from (x, y) to (i, j)
+            int distanceSquared = (i - x) * (i - x) + (j - y) * (j - y);
+
+            if (distanceSquared <= r * r) {
+                if (lastKeyPressed == sf::Keyboard::Key::Q)
+                {
+					std::unique_ptr<Sand> ele_ptr = std::make_unique<Sand>(grid);
+					grid.replaceElement(std::move(ele_ptr), i, j);
+                }
+                else if (lastKeyPressed == sf::Keyboard::Key::W)
+                {
+					std::unique_ptr<Stone> ele_ptr = std::make_unique<Stone>(grid);
+					grid.replaceElement(std::move(ele_ptr), i, j);
+                }
+                else if (lastKeyPressed == sf::Keyboard::Key::E)
+                {
+					std::unique_ptr<Water> ele_ptr = std::make_unique<Water>(grid);
+					grid.replaceElement(std::move(ele_ptr), i, j);
+                }
+                else if (lastKeyPressed == sf::Keyboard::Key::R)
+                {
+                    grid.replaceWithEmpty(i, j);
+                }
+            }
+        }
+    }
+}
+
+void InputHandler::getLastKeyPressed(sf::Event &event)
+{
+    if (event.type == sf::Event::KeyPressed)
+    {
+        lastKeyPressed = event.key.code;
+    }
+}
+
+void InputHandler::changeRadius(sf::Event& event)
+{
+    if (event.type == sf::Event::MouseWheelScrolled)
+    {
+        float delta = event.mouseWheelScroll.delta;
+        if (delta > 0)
+        {
+            markerRadius += 1;
+        }
+        else if (delta < 0 && markerRadius > 0)
+        {
+            markerRadius -= 1;
+        }
+    }
+}
+
+void InputHandler::drawMouseRadius()
+{
+    const int numPoints = 50; 
+    int x = sf::Mouse::getPosition(renderer.window).x;
+    int y = sf::Mouse::getPosition(renderer.window).y;
+    float r = markerRadius * cellSize;
+    sf::CircleShape circle(r);
+    circle.setPosition(x - r, y - r);
+    circle.setFillColor(sf::Color::Transparent);
+    circle.setOutlineColor(sf::Color::Red);
+    circle.setOutlineThickness(1.0);
+
+    renderer.window.draw(circle);
+}
+
+
+
+

@@ -34,37 +34,7 @@ void Liquid::update()
     }
 
 
-	if (target_cell->isSolid())
-		{
-		bool left;
-		bool right;
-		std::tie(left, right) = lookDiagonal();
-		if (left && right)
-		{
-			if(grid.step_counter % 2 == 0)
-			{
-				swapWith(target_x-1, target_y);
-				return;
-			}
-			else
-			{
-				swapWith(target_x+1, target_y);
-				return;
-			}
-		} 
-		else if (left)
-		{
-			swapWith(target_x-1, target_y);
-			return;
-		}
-		else if (right)
-		{
-			swapWith(target_x+1, target_y);
-			return;
-		} 
-	} 
-
-    // check left and right since below is filled
+	    // check left and right since below is filled
     target_x = x;
     target_y = y;
 

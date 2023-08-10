@@ -17,6 +17,9 @@ int main(){
     float windowHeight = 800;
     float updateInterval = 1.0/frame_cap;
     float elapsed = 0.0;
+    bool mousePressLeft = false;
+    bool mousePressRight = false;
+
     grid.init();
     sf::Clock clock;  
 
@@ -24,30 +27,34 @@ int main(){
     auto renderer = Renderer(window, grid, windowWidth, windowHeight);
     auto inputhandler = InputHandler(grid, renderer);
     renderer.setMargin(0);
-	//std::unique_ptr<Water> water_ptr = std::make_unique<Water>(grid);
-	//grid.replaceElement(std::move(water_ptr), 100, 1);
-
-    for (int j = 0; j<150; j++)
-    {
-        std::unique_ptr<Stone> stone_ptr = std::make_unique<Stone>(grid);
-        grid.replaceElement(std::move(stone_ptr), 25+j, 100);
-    }
     
-    bool mousePress;
     while (window.isOpen())
     {
         sf::Event event;
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed) { window.close();}
-                inputhandler.clickPullEvent(event);
-                if (event.type == sf::Event::MouseButtonPressed)
+                inputhandler.drawStaticElement(event);
+                inputhandler.getLastKeyPressed(event);
+                inputhandler.changeRadius(event);
+
+
+                if (event.type == sf::Event::MouseButtonPressed &&  event.mouseButton.button == sf::Mouse::Left)
                 {
-                    mousePress = true;
+                    mousePressLeft = true;
                 }
                 else if (event.type == sf::Event::MouseButtonReleased)
                 {
-                    mousePress = false;
+                    mousePressLeft = false;
+                }
+
+                if (event.type == sf::Event::MouseButtonPressed &&  event.mouseButton.button == sf::Mouse::Right)
+                {
+                    mousePressRight = true;
+                }
+                else if (event.type == sf::Event::MouseButtonReleased)
+                {
+                    mousePressRight = false;
                 }
                 
 
@@ -55,15 +62,15 @@ int main(){
 
         elapsed += clock.restart().asSeconds();
 
-        if (elapsed >= updateInterval && !mousePress)
+        if (elapsed >= updateInterval && !mousePressLeft)
         {
-            //std::cout << 1.0/elapsed << '\n';
+            std::cout << 1.0/elapsed << '\n';
             elapsed = 0;
             window.clear(); 
             renderer.drawGrid();
+            inputhandler.drawMouseRadius();
             window.display();
-            std::unique_ptr<Water> water_ptr = std::make_unique<Water>(grid);
-            grid.replaceElement(std::move(water_ptr), 100, 1);
+            if (mousePressRight) { inputhandler.spawnDynamicElement(); }
             grid.step();
         }
     }
