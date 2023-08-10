@@ -17,6 +17,7 @@ private:
 public:
     int const x_grid;
     int const y_grid;
+    int step_counter;
     std::vector<ElementPtr> cells;
     size_t index(int x, int y) const;
     Grid(int x, int y);

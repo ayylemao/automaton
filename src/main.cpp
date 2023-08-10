@@ -25,6 +25,8 @@ int main(){
     auto renderer = Renderer(window, grid, windowWidth, windowHeight);
     auto inputhandler = InputHandler(grid, renderer);
     renderer.setMargin(0);
+	//std::unique_ptr<Water> water_ptr = std::make_unique<Water>(grid);
+	//grid.replaceElement(std::move(water_ptr), 100, 1);
 
     for (int j = 0; j<150; j++)
     {
@@ -47,7 +49,7 @@ int main(){
 
         if (elapsed >= updateInterval)
         {
-            std::cout << 1.0/elapsed << '\n';
+            //std::cout << 1.0/elapsed << '\n';
             elapsed = 0;
             window.clear(); 
             renderer.drawGrid();

@@ -37,7 +37,7 @@ void MovableSolid::update()
 		std::tie(left, right) = lookDiagonal();
 		if (left && right)
 		{
-			if(utils::coinToss())
+			if(grid.step_counter % 2 == 0)
 			{
 				swapWith(target_x-1, target_y);
 				return;

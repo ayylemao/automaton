@@ -6,6 +6,7 @@ Element::Element(Grid &g) : grid(g)
     x = 0;
     y = 0;
     hasMoved = false;
+    dispersionRate = 1;
 };
 
 void Element::setPos(int row, int col){
@@ -72,32 +73,47 @@ std::tuple<bool, bool> Element::lookDiagonal()
     return std::make_tuple(left, right);
 }
 
-std::tuple<bool, bool> Element::lookLeftRight()
+std::tuple<int, int> Element::lookLeftRight()
 {
-    bool left = false;
-    bool right = false;
+    int left = 0;
+    int right = 0;
+    bool left_stopped = false;
+    bool right_stopped = false;
     int target_y = y;
-    //left
-    
-    int target_x = x - 1;
-	if (grid.isInBoundary(target_x, target_y))
-	{
-		if (grid.getElementAtCell(target_x, target_y)->isEmpty())
+    int target_x;
+      
+    for (int offset = 1; offset <= getDispersionRate(); offset++)
+    {
+        target_x = x - offset;
+		if (grid.isInBoundary(target_x, target_y) && !left_stopped)
 		{
-			left = true;
+			if (grid.getElementAtCell(target_x, target_y)->isEmpty())
+			{
+				left += 1;
+			}
+            else
+            {
+                left_stopped = true;
+            }
 		}
-	}
 
-    target_x = x + 1;
-	if (grid.isInBoundary(target_x, target_y))
-	{
-		if (grid.getElementAtCell(target_x, target_y)->isEmpty())
+        target_x = x + offset;
+		if (grid.isInBoundary(target_x, target_y) && !right_stopped)
 		{
-			right = true;
+			if (grid.getElementAtCell(target_x, target_y)->isEmpty())
+			{
+				right += 1;
+			}
+            else
+            {
+                right_stopped = true;
+            }
 		}
-	}
+    }
+
     return std::make_tuple(left, right);
 }
+
 
 void Element::swapWith(int swap_x, int swap_y)
 {

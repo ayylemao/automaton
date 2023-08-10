@@ -6,6 +6,7 @@
 Grid::Grid(int numX, int numY) : x_grid(numX), y_grid(numY)
 {
     cells.resize(numX*numY);
+    step_counter = 0;
 }
 
 
@@ -99,6 +100,7 @@ void Grid::step()
 		for (int x : xOrder)
 		{
 		    Element *element = getElementAtCell(x, y);
+            step_counter += 1;
 			if (!element->isEmpty() && !element->hasMoved)
 			{
 				element->update();
@@ -113,6 +115,7 @@ void Grid::step()
 			element->hasMoved = false;
         }
     }
+    step_counter = 0;
 }
 
 Grid::~Grid(){

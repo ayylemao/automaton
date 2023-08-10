@@ -37,32 +37,33 @@ void Liquid::update()
     target_x = x;
     target_y = y;
 
+
 	if (target_cell->isSolid() || target_cell->isLiquid())
 	{
-		bool left;
-		bool right;
+		int left;
+		int right;
 		std::tie(left, right) = lookLeftRight();
-		if (left && right)
+		if (left == right)
 		{
-			if(utils::coinToss())
+			if(grid.step_counter % 2 == 0)
 			{
-				swapWith(target_x-1, target_y);
+				swapWith(target_x-left, target_y);
 				return;
 			}
 			else
 			{
-				swapWith(target_x+1, target_y);
+				swapWith(target_x+right, target_y);
 				return;
 			}
 		} 
-		else if (left)
+		else if (left>right)
 		{
-			swapWith(target_x-1, target_y);
+			swapWith(target_x-left, target_y);
 			return;
 		}
-		else if (right)
+		else
 		{
-			swapWith(target_x+1, target_y);
+			swapWith(target_x+right, target_y);
 			return;
 		}
     }
