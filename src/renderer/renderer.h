@@ -12,6 +12,7 @@ class Renderer
         void setMargin(float s_margin);
         float getCellSize();
         sf::RenderWindow& window;
+        sf::Clock renderClock;
 
     private:
         Grid& grid;

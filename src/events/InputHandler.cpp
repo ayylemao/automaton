@@ -33,7 +33,7 @@ void InputHandler::clickDrawEvent(sf::Event &event)
         sf::Vector2i mousePosition = sf::Mouse::getPosition(renderer.window);
         int gridX = mousePosition.x / renderer.getCellSize();
         int gridY = mousePosition.y / renderer.getCellSize();
-
+ 
         for (int i = 0; i<markerRadius; i++)
         {
             for (int j = 0; j<markerRadius; j++)
@@ -57,7 +57,13 @@ void InputHandler::clickPullEvent(sf::Event& event) {
     static int startY;
     int startGridX;
     int startGridY;
+    static float elapsed = 0;
 
+    if (isDrawing)
+    {
+		elapsed += renderer.renderClock.getElapsedTime().asSeconds() - elapsed;
+    }
+    
     if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
         isDrawing = true;
         startX = event.mouseButton.x;
@@ -65,16 +71,17 @@ void InputHandler::clickPullEvent(sf::Event& event) {
     }
     else if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
         isDrawing = false;
+        elapsed = 0;
     }
 
-    if (isDrawing) {
+	if (isDrawing) {
         int endX = sf::Mouse::getPosition(renderer.window).x;
         int endY = sf::Mouse::getPosition(renderer.window).y;
+        std::cout << "StartX: " << startX << ' ' << startY << std::endl;
         startGridX = startX / cellSize;
         startGridY = startY / cellSize;
         endX = endX / cellSize;
         endY = endY / cellSize;
-        std::cout << startGridY / cellSize << std::endl;
         std::vector<std::tuple<int, int>> linePixels = utils::bresenhamLine(startGridX, startGridY, endX, endY);
 
 
@@ -88,5 +95,15 @@ void InputHandler::clickPullEvent(sf::Event& event) {
             }
 
         }
-    }
+		if (elapsed > 0.01)
+			{
+				startX = sf::Mouse::getPosition(renderer.window).x;
+				startY = sf::Mouse::getPosition(renderer.window).y;
+				elapsed = 0;
+			} 
+
+        renderer.window.clear();
+        renderer.drawGrid();
+        renderer.window.display();
+	}
 }

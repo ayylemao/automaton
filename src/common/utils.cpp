@@ -32,8 +32,7 @@ std::vector<std::tuple<int, int>> utils::bresenhamLine(int x1, int y1, int x2, i
 	int err = dx - dy;
 
 	int maxPoints = dx + dy + 1;
-	linePixels.reserve(maxPoints);
-
+	linePixels.reserve(std::max(maxPoints, 5));
 	while (true) {
 		linePixels.emplace_back(std::make_tuple(x1, y1));
 

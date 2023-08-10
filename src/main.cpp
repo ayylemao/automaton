@@ -33,20 +33,29 @@ int main(){
         grid.replaceElement(std::move(stone_ptr), 25+j, 100);
     }
     
-
+    bool mousePress;
     while (window.isOpen())
     {
         sf::Event event;
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed) { window.close();}
-                inputhandler.clickDrawEvent(event);
+                inputhandler.clickPullEvent(event);
+                if (event.type == sf::Event::MouseButtonPressed)
+                {
+                    mousePress = true;
+                }
+                else if (event.type == sf::Event::MouseButtonReleased)
+                {
+                    mousePress = false;
+                }
+                
 
         }
 
         elapsed += clock.restart().asSeconds();
 
-        if (elapsed >= updateInterval)
+        if (elapsed >= updateInterval && !mousePress)
         {
             //std::cout << 1.0/elapsed << '\n';
             elapsed = 0;
