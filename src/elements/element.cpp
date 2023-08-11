@@ -7,7 +7,7 @@ Element::Element(Grid &g) : grid(g)
     y = 0;
     hasMoved = false;
     dispersionRate = 1;
-    velocity = sf::Vector2f(0, 60);
+    velocity = sf::Vector2f(0, 0);
     carryOver = sf::Vector2f(0, 0);
 };
 

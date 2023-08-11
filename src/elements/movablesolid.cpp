@@ -56,7 +56,6 @@ void MovableSolid::update()
 		if (grid.getElementAtCell(x, y + 1)->isEmpty())
 		{
 			auto pathVec = utils::bresenhamLine(x, y, final_x, final_y);
-
 			int step = 0;
 			int currX;
 			int currY;
@@ -77,7 +76,6 @@ void MovableSolid::update()
 
 
 				if (!grid.isInBoundary(currX, currY)) {
-					std::cout << currX << " " << currY << " " << lastValidX << " " << lastValidY << std::endl;
 					grid.replaceWithEmpty(x, y);
 					return;
 				}
@@ -90,7 +88,7 @@ void MovableSolid::update()
 				{
 					if (currElement->isSolid())
 					{
-						velocity.y = 1/grid.dt;
+						velocity.y = 0;
 						swapWith(lastValidX, lastValidY);
 						return;
 					}
@@ -114,34 +112,39 @@ void MovableSolid::update()
 				std::tie(left, right) = lookDiagonal();
 				if (left && right)
 				{
-					if (grid.step_counter % 2 == 0)
+					if (utils::coinToss())
 					{
 						swapWith(target_x - 1, target_y);
-						velocity.y = 1/grid.dt;
+						velocity.y = grid.dtVel;
+						velocity.x = -0.5*grid.dtVel;
 						return;
 					}
 					else
 					{
 						swapWith(target_x + 1, target_y);
-						velocity.y = 1/grid.dt;
+						velocity.y = grid.dtVel;
+						velocity.x = 0.5*grid.dtVel;
 						return;
 					}
 				}
 				else if (left)
 				{
 					swapWith(target_x - 1, target_y);
-					velocity.y = 1/grid.dt;
+					velocity.y = grid.dtVel;
+					velocity.x = -0.5*grid.dtVel;
 					return;
 				}
 				else if (right)
 				{
 					swapWith(target_x + 1, target_y);
-					velocity.y = 1/grid.dt;
+					velocity.y = grid.dtVel;
+					velocity.x = 0.5*grid.dtVel;
 					return;
 				}
 				else
 				{
-					velocity.y = 1/grid.dt;
+					velocity.y = 0;
+					velocity.x = 0;
 					return;
 				}
 			}

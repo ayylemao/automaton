@@ -19,7 +19,7 @@ int main(){
     bool mousePressLeft = false;
     bool mousePressRight = false;
 
-    auto grid = Grid(200, 200, dt);
+    auto grid = Grid(200, 200, 0.1);
     grid.init();
     sf::Clock clock;  
 
