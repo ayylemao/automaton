@@ -17,6 +17,8 @@ protected:
     int y;
     Grid &grid;
     int dispersionRate;
+    sf::Vector2f velocity;
+    sf::Vector2f carryOver;
 
 public:
 

@@ -11,17 +11,24 @@
 
 
 int main(){
-    float frame_cap = 60.0;
-    auto grid = Grid(200, 200);
+    float frame_cap = 1.0;
     float windowWidth = 800;
     float windowHeight = 800;
-    float updateInterval = 1.0/frame_cap;
+    float dt = 1.0/frame_cap;
     float elapsed = 0.0;
     bool mousePressLeft = false;
     bool mousePressRight = false;
 
+    auto grid = Grid(200, 200, 1);
     grid.init();
     sf::Clock clock;  
+
+    for (int i = 0; i < 200; i++)
+    {
+        std::unique_ptr<Stone> stone = std::make_unique<Stone>(grid);
+        grid.replaceElement(std::move(stone), i, 10);
+    }
+    std::cout << grid.getElementAtCell(5, 10)->isEmpty() << std::endl;
 
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Automaton");
     auto renderer = Renderer(window, grid, windowWidth, windowHeight);
@@ -62,9 +69,9 @@ int main(){
 
         elapsed += clock.restart().asSeconds();
 
-        if (elapsed >= updateInterval && !mousePressLeft)
+        if (elapsed >= dt && !mousePressLeft)
         {
-            std::cout << 1.0/elapsed << '\n';
+            //std::cout << 1.0/elapsed << '\n';
             elapsed = 0;
             window.clear(); 
             renderer.drawGrid();

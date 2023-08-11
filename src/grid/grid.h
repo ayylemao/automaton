@@ -18,9 +18,11 @@ public:
     int const x_grid;
     int const y_grid;
     int step_counter;
+    float gravity;
+    float dt;
     std::vector<ElementPtr> cells;
     size_t index(int x, int y) const;
-    Grid(int x, int y);
+    Grid(int x, int y, float dt);
     void init();
     bool isCellEmpty(int x, int y);
     void initElement(ElementPtr element, int x, int y);

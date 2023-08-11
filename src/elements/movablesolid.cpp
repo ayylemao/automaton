@@ -14,49 +14,61 @@ void MovableSolid::update()
     int target_x = x;
     int target_y = y + 1;
 
-    // check if would move out of bounds and replace with empty cell
-
-    if (!grid.isInBoundary(target_x, target_y))
-    {
-        grid.replaceWithEmpty(x, y);
-        return;
-    }
+    velocity.y += grid.gravity * grid.dt;
     
-	Element *target_cell = grid.getElementAtCell(target_x, target_y);
+    int x_velMod = velocity.x >= 0 ? 1 : -1;
+        
+    int final_x = x + (velocity.x * grid.dt);
+    int final_y = y + (velocity.y * grid.dt);
+    //std::cout << final_y << std::endl;
 
-    if (target_cell->isEmpty() || target_cell->isLiquid())
+    auto pathVec = utils::bresenhamLine(x, y, final_x, final_y);
+
+    int step = 0;
+    int currX;
+    int currY;
+    int lastValidX;
+    int lastValidY;
+    for (auto& tar_pos : pathVec)
     {
-        swapWith(target_x, target_y);
-        return;
-    }
+        if (step == 0)
+        {
+            step += 1;
+            continue;
+        }
 
-	if (target_cell->isSolid())
-		{
-		bool left;
-		bool right;
-		std::tie(left, right) = lookDiagonal();
-		if (left && right)
-		{
-			if(grid.step_counter % 2 == 0)
-			{
-				swapWith(target_x-1, target_y);
-				return;
-			}
-			else
-			{
-				swapWith(target_x+1, target_y);
-				return;
-			}
-		} 
-		else if (left)
-		{
-			swapWith(target_x-1, target_y);
-			return;
-		}
-		else if (right)
-		{
-			swapWith(target_x+1, target_y);
-			return;
-		} 
-	} 
+        std::tie(currX, currY) = tar_pos;
+        std::cout << currX << " " << currY << " ";
+        std::tie(lastValidX, lastValidY) = pathVec[step - 1];
+
+        Element* currElement = grid.getElementAtCell(currX, currX);
+        std::cout << "is solid? " << currElement->isSolid() << '\n';
+
+
+        if (!grid.isInBoundary(currX, currX)) {
+            std::cout << "called out of bounds";
+            grid.replaceWithEmpty(lastValidX, lastValidY);
+            return;
+        }
+        if (!currElement->isEmpty())
+        {
+            step += 1;
+            continue;
+        }
+        else
+        {
+            if (currElement->isSolid())
+            {
+                velocity.y = 0;
+                swapWith(lastValidX, lastValidY);
+                return;
+            }
+        }
+        step += 1;
+    }
+    std::tie(lastValidX, lastValidY) = pathVec.back();
+    //std::cout << lastValidX << " " << lastValidX << std::endl;
+    std::cout << '\n';
+    swapWith(lastValidX, lastValidY);
+
 }
