@@ -4,7 +4,7 @@ InputHandler::InputHandler(Grid &g, Renderer &r) : grid(g), renderer(r)
 {
     cellSize = renderer.getCellSize();
     lastKeyPressed = sf::Keyboard::Key::Q;
-    markerRadius = 1;
+    markerRadius = 0;
 }
 
 void InputHandler::clickDrawEvent(sf::Event &event)
