@@ -17,7 +17,6 @@ protected:
     int y;
     Grid &grid;
     int dispersionRate;
-    sf::Vector2f velocity;
     sf::Vector2f carryOver;
     float dtVel;
 
@@ -25,6 +24,7 @@ public:
 
     bool hasMoved;
     sf::Color color;
+    sf::Vector2f velocity;
 
     Element(Grid &g);
 

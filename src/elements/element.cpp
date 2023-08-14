@@ -9,6 +9,7 @@ Element::Element(Grid &g) : grid(g)
     dispersionRate = 1;
     velocity = sf::Vector2f(0, 0);
     carryOver = sf::Vector2f(0, 0);
+
 };
 
 void Element::setPos(int row, int col){
@@ -53,7 +54,7 @@ std::tuple<bool, bool> Element::lookDiagonal()
 
     //left
     int target_x = x - 1;
-    if (grid.isInBoundary(target_x, target_x))
+    if (grid.isInBoundary(target_x, target_y))
     {
         Element* targetCellLeft = grid.getElementAtCell(target_x, target_y);
         if (targetCellLeft->isEmpty() || targetCellLeft->isLiquid())
@@ -64,7 +65,7 @@ std::tuple<bool, bool> Element::lookDiagonal()
 
     //right
     target_x = x + 1;
-    if (grid.isInBoundary(target_x, target_x))
+    if (grid.isInBoundary(target_x, target_y))
     {
         Element* targetCellRight = grid.getElementAtCell(target_x, target_y);
         if (targetCellRight->isEmpty() || targetCellRight->isLiquid())

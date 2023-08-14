@@ -7,7 +7,8 @@ Grid::Grid(int numX, int numY, float dt_) : x_grid(numX), y_grid(numY), dt(dt_)
 {
     cells.resize(numX*numY);
     step_counter = 0;
-    gravity = 20;
+    gravity = 10;
+    dtVel = 1.0 / dt;
 }
 
 

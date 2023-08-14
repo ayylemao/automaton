@@ -20,7 +20,7 @@ public:
     int step_counter;
     float gravity;
     float dt;
-    float dtVel = 1.0 / dt;
+    float dtVel;
     std::vector<ElementPtr> cells;
     size_t index(int x, int y) const;
     Grid(int x, int y, float dt);

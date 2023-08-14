@@ -17,6 +17,7 @@ void MovableSolid::update()
     float velYDeltaTimeFloat = velocity.y * grid.dt;
     int velXDeltaTime;
     int velYDeltaTime; 
+	bool xMod = (x < 0) ? true : false;
 	
     if (std::abs(velXDeltaTimeFloat) < 1)
     {
@@ -51,107 +52,72 @@ void MovableSolid::update()
     int final_x = x + velXDeltaTimeFloat;
     int final_y = y + velYDeltaTimeFloat;
     
-	if (grid.isInBoundary(x, y + 1))
+	auto pathVec = utils::bresenhamLine(x, y, final_x, final_y);
+	int step = 0;
+	int currX;
+	int currY;
+	int lastValidX;
+	int lastValidY;
+	//bool xDiffLarger = std::abs(x - final_x) - std::abs(y - final_y) >= 0 ? true : false;
+
+	for (auto& tar_pos : pathVec)
 	{
-		if (grid.getElementAtCell(x, y + 1)->isEmpty())
+		if (step == 0)
 		{
-			auto pathVec = utils::bresenhamLine(x, y, final_x, final_y);
-			int step = 0;
-			int currX;
-			int currY;
-			int lastValidX;
-			int lastValidY;
-			for (auto& tar_pos : pathVec)
+			step += 1;
+			continue;
+		}
+
+		std::tie(currX, currY) = tar_pos;
+		std::tie(lastValidX, lastValidY) = pathVec[step - 1];
+
+		Element* currElement = grid.getElementAtCell(currX, currY);
+
+		if (!grid.isInBoundary(currX, currY)) {
+			grid.replaceWithEmpty(x, y);
+			return;
+		}
+		if (currElement->isEmpty())
+		{
+			step += 1;
+			if (grid.getElementAtCell(currX, currY + 1)->isSolid())
 			{
-				if (step == 0)
-				{
-					step += 1;
-					continue;
-				}
-
-				std::tie(currX, currY) = tar_pos;
-				std::tie(lastValidX, lastValidY) = pathVec[step - 1];
-
-				Element* currElement = grid.getElementAtCell(currX, currY);
-
-
-				if (!grid.isInBoundary(currX, currY)) {
-					grid.replaceWithEmpty(x, y);
-					return;
-				}
-				if (currElement->isEmpty())
-				{
-					step += 1;
-					continue;
-				}
-				else
-				{
-					if (currElement->isSolid())
-					{
-						velocity.y = 0;
-						swapWith(lastValidX, lastValidY);
-						return;
-					}
-				}
-				step += 1;
+				velocity.x *= 0.01;
 			}
-			std::tie(lastValidX, lastValidY) = pathVec.back();
-			swapWith(lastValidX, lastValidY);
+			continue;
 		}
 		else
 		{
-			int target_x = x;
-			int target_y = y + 1;
-
-			Element* target_cell = grid.getElementAtCell(target_x, target_y);
-
-			if (target_cell->isSolid())
+			if (currElement->isSolid())
 			{
-				bool left;
-				bool right;
-				std::tie(left, right) = lookDiagonal();
-				if (left && right)
+				//velocity.x = (currElement->velocity.x + velocity.x) / 2;
+				velocity.y = (currElement->velocity.y + velocity.y) / 2;
+
+				if (currY != lastValidY && lastValidX == currX)
 				{
-					if (utils::coinToss())
+					if (velocity.x != 0)
 					{
-						swapWith(target_x - 1, target_y);
-						velocity.y = grid.dtVel;
-						velocity.x = -0.5*grid.dtVel;
-						return;
+						velocity.x += 0.707 * velocity.y * xMod;
+						velocity.y = 0;
+						velocity.x *= 0.01;
 					}
 					else
 					{
-						swapWith(target_x + 1, target_y);
-						velocity.y = grid.dtVel;
-						velocity.x = 0.5*grid.dtVel;
-						return;
+						velocity.x = (grid.step_counter % 2 == 0) ? 0.707 * velocity.y : -0.707 * velocity.y;
+						velocity.y = 0;
 					}
 				}
-				else if (left)
-				{
-					swapWith(target_x - 1, target_y);
-					velocity.y = grid.dtVel;
-					velocity.x = -0.5*grid.dtVel;
-					return;
-				}
-				else if (right)
-				{
-					swapWith(target_x + 1, target_y);
-					velocity.y = grid.dtVel;
-					velocity.x = 0.5*grid.dtVel;
-					return;
-				}
-				else
-				{
-					velocity.y = 0;
-					velocity.x = 0;
-					return;
-				}
+				std::cout << "called " << velocity.x << std::endl;
+
+				swapWith(lastValidX, lastValidY);
+				return;
 			}
 		}
+		step += 1;
 	}
-	else
-	{
-		grid.replaceWithEmpty(x, y);
-	}
+
+		std::tie(lastValidX, lastValidY) = pathVec.back();
+		swapWith(lastValidX, lastValidY);
+		
+	//grid.replaceWithEmpty(x, y);
 }
