@@ -32,6 +32,7 @@ public:
     Element* getElementAtCell(int x, int y);
     bool isInBoundary(int x, int y);
     Element* getLinearElement(int i);
+    static void printTuple(std::tuple<int, int> tup);
     void step();
     ~Grid();
 };

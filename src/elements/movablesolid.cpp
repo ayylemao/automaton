@@ -17,9 +17,9 @@ void MovableSolid::update()
     float velYDeltaTimeFloat = velocity.y * grid.dt;
     int velXDeltaTime;
     int velYDeltaTime; 
-	bool xMod = (x < 0) ? true : false;
+	int xMod = (x < 0) ? -1 : 1;
 	
-    if (std::abs(velXDeltaTimeFloat) < 1)
+    if (std::abs(velXDeltaTimeFloat) < 1.0)
     {
         carryOver.x += velXDeltaTimeFloat;
         velXDeltaTime = (int)carryOver.x;
@@ -34,7 +34,7 @@ void MovableSolid::update()
         velXDeltaTime = (int)velXDeltaTimeFloat;
     }
 
-    if (std::abs(velYDeltaTimeFloat) < 1)
+    if (std::abs(velYDeltaTimeFloat) < 1.0)
     {
         carryOver.y += velYDeltaTimeFloat;
         velYDeltaTime = (int)carryOver.y;
@@ -49,27 +49,26 @@ void MovableSolid::update()
         velYDeltaTime = (int)velYDeltaTimeFloat;
     }
 
-    int final_x = x + velXDeltaTimeFloat;
-    int final_y = y + velYDeltaTimeFloat;
+    int final_x = x + velXDeltaTime;
+    int final_y = y + velYDeltaTime;
     
-	auto pathVec = utils::bresenhamLine(x, y, final_x, final_y);
+	auto pathVec = utils::bresenhamLine(x, y, std::round(final_x), std::round(final_y));
+	int pathLength = pathVec.size();
 	int step = 0;
 	int currX;
 	int currY;
 	int lastValidX;
 	int lastValidY;
-	//bool xDiffLarger = std::abs(x - final_x) - std::abs(y - final_y) >= 0 ? true : false;
 
-	for (auto& tar_pos : pathVec)
+	for (int i = 0; i < pathLength; i++)
 	{
-		if (step == 0)
+		if (i == 0)
 		{
-			step += 1;
 			continue;
 		}
 
-		std::tie(currX, currY) = tar_pos;
-		std::tie(lastValidX, lastValidY) = pathVec[step - 1];
+		std::tie(currX, currY) = pathVec[i];
+		std::tie(lastValidX, lastValidY) = pathVec[i - 1];
 
 		Element* currElement = grid.getElementAtCell(currX, currY);
 
@@ -79,41 +78,27 @@ void MovableSolid::update()
 		}
 		if (currElement->isEmpty())
 		{
-			step += 1;
-			if (grid.getElementAtCell(currX, currY + 1)->isSolid())
-			{
-				velocity.x *= 0.01;
-			}
 			continue;
 		}
 		else
 		{
 			if (currElement->isSolid())
 			{
-				//velocity.x = (currElement->velocity.x + velocity.x) / 2;
+				velocity.x = (currElement->velocity.x + velocity.x) / 2;
 				velocity.y = (currElement->velocity.y + velocity.y) / 2;
-
-				if (currY != lastValidY && lastValidX == currX)
+				if (currX == lastValidX && currY != lastValidY)
 				{
-					if (velocity.x != 0)
+					if (velocity.x == 0 && velocity.y != 0)
 					{
-						velocity.x += 0.707 * velocity.y * xMod;
-						velocity.y = 0;
-						velocity.x *= 0.01;
-					}
-					else
-					{
-						velocity.x = (grid.step_counter % 2 == 0) ? 0.707 * velocity.y : -0.707 * velocity.y;
+						velocity.x = (utils::coinToss()) ? 0.7 * velocity.y : -0.7 * velocity.y;
 						velocity.y = 0;
 					}
 				}
-				std::cout << "called " << velocity.x << std::endl;
-
+				velocity.x -= 0.9 * velocity.x * grid.dt * xMod;
 				swapWith(lastValidX, lastValidY);
 				return;
 			}
 		}
-		step += 1;
 	}
 
 		std::tie(lastValidX, lastValidY) = pathVec.back();

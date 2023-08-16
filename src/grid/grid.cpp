@@ -95,6 +95,14 @@ Element* Grid::getLinearElement(int i)
     return cells[i].get();
 }
 
+void Grid::printTuple(std::tuple<int, int> tup)
+{
+    int x;
+    int y;
+    std::tie(x, y) = tup;
+    std::cout << "(" << x << ", " << y << ")\n";
+}
+
 void Grid::step()
 {
     std::vector<int> xOrder = utils::shuffleXOrder(x_grid);
