@@ -4,6 +4,7 @@
 
 #include <tuple>
 #include <vector>
+#include <cmath>
 #include <SFML/Graphics.hpp>
 #include "../grid/grid.h"
 
@@ -19,10 +20,12 @@ protected:
     int dispersionRate;
     sf::Vector2f carryOver;
     float dtVel;
+    bool isFreeFalling;
 
 public:
 
     bool hasMoved;
+    float frictionFactor;
     sf::Color color;
     sf::Vector2f velocity;
 
@@ -36,6 +39,7 @@ public:
     std::tuple<int, int> lookLeftRight();
     void swapWith(int row, int col);
     
+    virtual bool actOnNeighbouringElement(Element* neighbour, int currX, int currY, bool isFinal, bool isFirst, int lastValidX, int lastValidY, int depth);
     virtual int getDispersionRate() const;
     virtual bool isSolid() const; 
     virtual bool isGas() const;

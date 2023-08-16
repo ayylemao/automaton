@@ -9,5 +9,6 @@ Sand::Sand(Grid &g) : MovableSolid(g)
         sf::Uint8(100 + rand() % 56),          // Blue channel with random variation
         sf::Uint8(255)                        // Alpha channel
     );
+    frictionFactor = 0.9;
 };
 

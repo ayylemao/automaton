@@ -9,6 +9,8 @@ Element::Element(Grid &g) : grid(g)
     dispersionRate = 1;
     velocity = sf::Vector2f(0, 0);
     carryOver = sf::Vector2f(0, 0);
+    isFreeFalling = true;
+    frictionFactor = 0;
 
 };
 
@@ -26,6 +28,11 @@ bool Element::isGas() const { return false; }
 bool Element::isLiquid() const { return false; }
 bool Element::isMovable() const { return false; }
 bool Element::isEmpty() const { return false; }
+
+bool Element::actOnNeighbouringElement(Element* neighbour, int currX, int currY, bool isFinal, bool isFirst, int lastValidX, int lastValidY, int depth)
+{
+    return false;
+}
 
 int Element::getDispersionRate() const
 {
@@ -120,10 +127,14 @@ std::tuple<int, int> Element::lookLeftRight()
 
 void Element::swapWith(int swap_x, int swap_y)
 {
-    grid.getElementAtCell(swap_x, swap_y)->setPos(x, y);
-    std::swap(grid.cells[grid.index(x, y)], grid.cells[grid.index(swap_x, swap_y)]);
-    x = swap_x;
-    y = swap_y;
+    Element* swapTarget = grid.getElementAtCell(swap_x, swap_y);
+    if (this != swapTarget)
+    {
+		swapTarget->setPos(x, y);
+		std::swap(grid.cells[grid.index(x, y)], grid.cells[grid.index(swap_x, swap_y)]);
+		x = swap_x;
+		y = swap_y;
+    }
 }
 
 Element::~Element()

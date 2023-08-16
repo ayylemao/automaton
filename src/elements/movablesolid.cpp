@@ -11,7 +11,8 @@ bool MovableSolid::isMovable() const { return true; }
 void MovableSolid::update() 
 {
        // One cell below
-    velocity.y += grid.gravity * grid.dt;
+    velocity.y += grid.gravity;
+    if (isFreeFalling) { velocity.x *= 0.9; }
     
     float velXDeltaTimeFloat = velocity.x * grid.dt;
     float velYDeltaTimeFloat = velocity.y * grid.dt;
@@ -57,52 +58,173 @@ void MovableSolid::update()
 	int step = 0;
 	int currX;
 	int currY;
-	int lastValidX;
-	int lastValidY;
-
+	int lastValidX = x;
+	int lastValidY = y;
 	for (int i = 0; i < pathLength; i++)
 	{
-		if (i == 0)
-		{
-			continue;
-		}
-
 		std::tie(currX, currY) = pathVec[i];
-		std::tie(lastValidX, lastValidY) = pathVec[i - 1];
+        if (grid.isInBoundary(currX, currY))
+        {
+            Element* neighbour = grid.getElementAtCell(currX, currY);
+            if (this == neighbour)
+            {
+                continue;
+            }
+            bool stopped = actOnNeighbouringElement
+            (
+                neighbour,
+                currX,
+                currY,
+                i == pathLength - 1, i == 1, lastValidX, lastValidY, 0
+            );
+            if (stopped)
+            {
+                break;
+            }
+            lastValidX = currX;
+            lastValidY = currY;
+        }
+        else
+        {
+            grid.replaceWithEmpty(x, y);
+        }
 
-		Element* currElement = grid.getElementAtCell(currX, currY);
 
-		if (!grid.isInBoundary(currX, currY)) {
-			grid.replaceWithEmpty(x, y);
-			return;
-		}
-		if (currElement->isEmpty())
-		{
-			continue;
-		}
-		else
-		{
-			if (currElement->isSolid())
-			{
-				velocity.x = (currElement->velocity.x + velocity.x) / 2;
-				velocity.y = (currElement->velocity.y + velocity.y) / 2;
-				if (currX == lastValidX && currY != lastValidY)
-				{
-					if (velocity.x == 0 && velocity.y != 0)
-					{
-						velocity.x = (utils::coinToss()) ? 0.7 * velocity.y : -0.7 * velocity.y;
-						velocity.y = 0;
-					}
-				}
-				velocity.x -= 0.9 * velocity.x * grid.dt * xMod;
-				swapWith(lastValidX, lastValidY);
-				return;
-			}
-		}
+        
+
 	}
-
-		std::tie(lastValidX, lastValidY) = pathVec.back();
-		swapWith(lastValidX, lastValidY);
-		
-	//grid.replaceWithEmpty(x, y);
 }
+
+bool MovableSolid::actOnNeighbouringElement(Element* neighbour, int currX, int currY, bool isFinal, bool isFirst, int lastValidX, int lastValidY, int depth)
+{
+    if (neighbour->isEmpty())
+    {
+        if (isFinal)
+        {
+            isFreeFalling = true;
+            swapWith(currX, currY);
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else if (neighbour->isSolid())
+    {
+        if (depth > 0) { return true; }
+        if (isFinal)
+        {
+            swapWith(lastValidX, lastValidY);
+            return true;
+        }
+        if (isFreeFalling)
+        {
+            float absY = std::max(std::abs(velocity.y), 105.f);
+            velocity.x = velocity.x < 0 ? -absY : absY;
+        }
+        float vel_norm = std::sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
+        float normX = velocity.x / vel_norm;
+        float normY = velocity.y / vel_norm;
+        int additionalX = getAdditional(normX);
+        int additionalY = getAdditional(normY);
+
+        Element* diagonalNeighbour = grid.getElementAtCell(x + additionalX, y + additionalY);
+        if (isFirst)
+        {
+            velocity.y = getAverageVelOrGravity(velocity.y, neighbour->velocity.y);
+        }
+        //else
+        //{
+        //    velocity.y = -124;
+        //}
+
+        neighbour->velocity.y = velocity.y;
+        velocity.x *= frictionFactor * neighbour->frictionFactor;
+        if (diagonalNeighbour != nullptr)
+        {
+            bool stoppedDiagonally = actOnNeighbouringElement(
+                diagonalNeighbour,
+                x + additionalX,
+                y + additionalY,
+                true,
+                false,
+                lastValidX,
+                lastValidY,
+                depth + 1
+            );
+            if (!stoppedDiagonally)
+            {
+                isFreeFalling = true;
+                return true;
+            }
+        }
+
+        Element* adjacentNeighbour = grid.getElementAtCell(x + additionalX, y);
+
+        if (adjacentNeighbour != nullptr && adjacentNeighbour != diagonalNeighbour)
+        {
+            bool stoppedAdjacently = actOnNeighbouringElement
+            (
+                adjacentNeighbour,
+                x + additionalX,
+                y,
+                true,
+                false,
+                lastValidX,
+                lastValidY,
+                depth + 1
+            );
+            if (stoppedAdjacently) { velocity.x *= -1; }
+            if (!stoppedAdjacently)
+            {
+                isFreeFalling = false;
+                return true;
+            }
+        }
+        isFreeFalling = false;
+
+        swapWith(lastValidX, lastValidY);
+        return true;
+    }
+    else if (neighbour->isGas())
+    {
+        if (isFinal)
+        {
+            swapWith(currX, currY);
+            return true;
+        }
+        return false;
+    }
+    return false;
+}
+
+int MovableSolid::getAdditional(float val)
+{
+    if (val < -.1f)
+    {
+        return (int)std::floor(val);
+    }
+    else if (val > .1f)
+    {
+        return (int)std::ceil(val);
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+float MovableSolid::getAverageVelOrGravity(float vel, float otherVel)
+{
+    float avg = (vel + otherVel) / 2;
+    if (avg > 0)
+    {
+        return avg;
+    }
+    else
+    {
+        return std::min(avg, 124.f);
+    }
+}
+
+

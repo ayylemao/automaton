@@ -14,6 +14,9 @@ class MovableSolid : public Solid
 
         bool isMovable() const override;
         void update() override;
+        bool actOnNeighbouringElement(Element* neighbour, int currX, int currY, bool isFinal, bool isFirst, int lastValidX, int lastValidY, int depth) override;
+        int getAdditional(float val);
+        float getAverageVelOrGravity(float vel, float othervel);
 };
 
 

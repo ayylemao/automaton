@@ -7,7 +7,7 @@ Grid::Grid(int numX, int numY, float dt_) : x_grid(numX), y_grid(numY), dt(dt_)
 {
     cells.resize(numX*numY);
     step_counter = 0;
-    gravity = 10;
+    gravity = 5;
     dtVel = 1.0 / dt;
 }
 
@@ -29,7 +29,14 @@ bool Grid::isCellEmpty(int x, int y)
 
 Element* Grid::getElementAtCell(int x, int y)
 {
-    return cells[index(x, y)].get();
+    if (isInBoundary(x, y))
+    {
+        return cells[index(x, y)].get();
+    }
+    else
+    {
+        return nullptr;
+    }
 }
 
 void Grid::initElement(ElementPtr element, int to_x, int to_y)
